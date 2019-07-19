@@ -9,8 +9,8 @@
 /build
 
 # misc
-.nodemon.json
-.package-lock.json
+nodemon.json
+package-lock.json
 .DS_Store
 .env.local
 .env.development.local
