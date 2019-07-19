@@ -1,0 +1,8 @@
+.expenses_list {
+  color: brown;
+    width: 40rem;
+    max-width: 90%;
+    margin: 2rem auto;
+    list-style: none;
+    padding: 0;
+  }
