@@ -32,12 +32,14 @@ app.use(
   })
 );
 
+const PORT = process.env.PORT || 8000;
+
 mongoose.connect(
   `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-qs7yd.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
   { useNewUrlParser: true }
 ).then(() => {
   console.log("Connected to db!");
-  app.listen(8000);
+  app.listen(PORT, ()=> console.log(`Server started on port ${PORT}`));
 }).catch(err => {
   console.log(err);
 });
