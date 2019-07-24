@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from 'react-apollo';
 
 import AuthPage from './pages/Auth';
 import BookingsPage from './pages/Bookings';
@@ -10,6 +12,10 @@ import MainNavigation from './components/Navigation/MainNavigation';
 import AuthContext from './context/auth-context';
 
 import './App.css';
+
+const client = new ApolloClient({
+  uri: 'http://localhost:8000/graphql'
+});
 
 class App extends Component {
   state = {
@@ -27,6 +33,7 @@ class App extends Component {
 
   render() {
     return (
+      <ApolloProvider client={client}>
       <BrowserRouter>
         <React.Fragment>
           <AuthContext.Provider
@@ -59,6 +66,7 @@ class App extends Component {
           </AuthContext.Provider>
         </React.Fragment>
       </BrowserRouter>
+      </ApolloProvider>
     );
   }
 }

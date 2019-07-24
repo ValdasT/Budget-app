@@ -3,14 +3,12 @@ import TestContext from '../../context/test-context';
 
 const OneTest = () => {
 
-    const { count, fruit } = useContext(TestContext);
+    const { count, fruit, dataFromDb } = useContext(TestContext);
 
     let [name, setName] = useState('Baravykas');
-
-
     return (
         <div>
-            <p>Your name is {name} {count}</p>
+            <p>Your name is {name} {count} {dataFromDb.lenght}</p>
             <button className="btn" onClick={() => setName(name = 'Johan')}>
                 Johan
             </button>
