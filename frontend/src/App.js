@@ -14,7 +14,7 @@ import AuthContext from './context/auth-context';
 import './App.css';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:8000/graphql'
+  uri: '/graphql'
 });
 
 class App extends Component {
