@@ -89,14 +89,16 @@ const Example = () => {
                     ({ loading, err, data }) => {
                         if (loading) return <h1>Loading</h1>;
                         if (err) console.log(err);
-                        if (data) console.log(data.allFiles);
-                        return (<Fragment>{
+                        if (data) {
+                            return (<Fragment>{
 
-                            data.allFiles.map(e => (
-                                <div key={e._id}>{e._id}</div>
-                                
-                            ))
-                        }</Fragment>);
+                                data.allFiles.map(e => (
+                                    <div key={e._id}>{e._id}</div>
+                                    
+                                ))
+                            }</Fragment>);
+                        }
+
                     }
                 }
             </Query>
