@@ -18,11 +18,46 @@ type Event {
   creator: User!
 }
 
+type Expense {
+  _id: ID!
+  title: String!
+  description: String!
+  price: Float!
+  createdAt: String!
+  updatedAt: String!
+  creator: User!
+}
+
+type Income {
+  _id: ID!
+  title: String!
+  description: String!
+  price: Float!
+  createdAt: String!
+  updatedAt: String!
+  creator: User!
+}
+
+type Category {
+  key: String!
+  value: String!
+}
+
+type Settings{
+  _id: ID!
+  categories: [Category!]
+}
+
 type User {
   _id: ID!
   email: String!
   password: String
+  name: String!
+  surname: String!
+  userSettings: [Settings!]
   createdEvents: [Event!]
+  createdExpenses: [Expense!]
+  createdIncomes: [Income!]
 }
 
 type AuthData {
@@ -47,6 +82,8 @@ input EventInput {
 input UserInput {
   email: String!
   password: String!
+  name: String!
+  surname: String!
 }
 
 input FileInput {

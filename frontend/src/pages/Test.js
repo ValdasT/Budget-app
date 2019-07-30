@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, Fragment } from 'react';
 import OneTest from '../components/OneTest/OneTest';
+import TwoTest from '../components/OneTest/TwoTest';
 import TestContext from '../context/test-context';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
@@ -16,7 +17,32 @@ const Example = () => {
           }
       }`;
 
+    let [show, setshow] = useState(false);
 
+    let showChnge = () => {
+        setshow(show = <div>
+            <h1>----------------------</h1>
+            <Query query={myQuery}>
+                {
+                    ({ loading, err, data }) => {
+                        if (loading) return <h1>Loading</h1>;
+                        if (err) return <h1>{err}</h1>;
+                        if (data) {
+                            { setFruit((fruit = fruitPicker())) }
+                            return (<Fragment >{
+                                data.allFiles.map(e => (
+                                    <div key={e._id}>{e._id}</div>
+                                    
+                                ))
+                            }</Fragment>);
+                        }
+
+                    }
+                }
+            </Query>
+            <h1>----------------------</h1>
+        </div>);
+    };
     // Declare a new state variable, which we'll call "count"
     let [count, setCount] = useState(0);
     let [fruit, setFruit] = useState('Fakama');
@@ -33,14 +59,9 @@ const Example = () => {
     };
 
     useEffect(() => {
-        // Update the document title using the browser API
         document.title = `You clicked ${count} times`;
         tesFunction(fruit);
     }, [fruit]);
-
-    // useEffect(() => {
-    //     makemagick();
-    // },[]);
 
     const clearMagick = () => {
         setdataFromDb (dataFromDb = []);
@@ -59,7 +80,7 @@ const Example = () => {
             `
         };
     
-        fetch('http://localhost:8000/graphql', {
+        fetch('/graphql', {
             method: 'POST',
             body: JSON.stringify(requestBody),
             headers: {
@@ -84,7 +105,9 @@ const Example = () => {
     return (
         <TestContext.Provider value={{ count, fruit, dataFromDb }}>
             <OneTest />
-            <Query query={myQuery}>
+            {show}
+            <button onClick={() => { showChnge(); }}>Show?</button>
+            {/* <Query query={myQuery}>
                 {
                     ({ loading, err, data }) => {
                         if (loading) return <h1>Loading</h1>;
@@ -101,7 +124,7 @@ const Example = () => {
 
                     }
                 }
-            </Query>
+            </Query> */}
             <button className="btn btn-primary btn-sm mr-2" onClick={() => makemagick()}>
                 Get Files from db!
             </button>

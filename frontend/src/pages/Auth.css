@@ -2,5 +2,19 @@
   width: 25rem;
   max-width: 80%;
   margin: 5rem auto;
+  /* border: 1px solid grey; */
+  padding: 15px;
+}
+
+#formContent {
+border-radius: 10px 10px 10px 10px;
+background: #fff;
+padding: 30px;
+width: 90%;
+max-width: 450px;
+position: relative;
+-webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+text-align: center;
 }
 

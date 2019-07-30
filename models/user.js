@@ -11,10 +11,36 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+  // name: {
+  //   type: String,
+  //   required: true
+  // },
+  // surname: {
+  //   type: String,
+  //   required: true
+  // },
   createdEvents: [
     {
       type: Schema.Types.ObjectId,
       ref: 'Event'
+    }
+  ],
+  createdIncomes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Income'
+    }
+  ],
+  createdExpenses: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Expense'
+    }
+  ],
+  settings: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Settings'
     }
   ]
 });
