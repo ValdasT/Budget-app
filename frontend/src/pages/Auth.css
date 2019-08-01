@@ -1,20 +1,37 @@
 .auth-form {
   width: 25rem;
   max-width: 80%;
-  margin: 5rem auto;
+  margin: 10rem auto;
   /* border: 1px solid grey; */
-  padding: 15px;
+  /* padding: 5px; */
 }
 
-#formContent {
-border-radius: 10px 10px 10px 10px;
-background: #fff;
-padding: 30px;
-width: 90%;
-max-width: 450px;
-position: relative;
--webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
-text-align: center;
+@media (max-width: 40em) {
+  .col-form-label {
+    display: none;
+  }
 }
 
+#formContentSignIn {
+  border-radius: 10px 10px 10px 10px;
+  background: #fff;
+  padding: 30px;
+  width: 90%;
+  max-width: 450px;
+  position: relative;
+  -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+#formContentSignUp {
+  border-radius: 10px 10px 10px 10px;
+  background: #fff;
+  padding: 30px;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
