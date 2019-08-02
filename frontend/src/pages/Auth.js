@@ -103,19 +103,19 @@ const AuthPage = () => {
 
 
     return (
-        <ModalContext.Provider value = {{modalHeader,modalText, showModal, setShowModal}}>
-        <AuthContext.Provider value={{ submitHandler, switchModeHandler }}>
-            <InfoModal />
-            {
-                isLoading ? <Spinner /> :
-                    <Fragment>
-                        {
-                            isLogin ? <SignUp /> : <SignIn />
-                        }
-                    </Fragment>
-            }
+        <ModalContext.Provider value={{ modalHeader, modalText, showModal, setShowModal }}>
+            <AuthContext.Provider value={{ submitHandler, switchModeHandler }}>
+                <InfoModal />
+                {
+                    isLoading ? <Spinner /> :
+                        <Fragment>
+                            {
+                                isLogin ? <SignUp /> : <SignIn />
+                            }
+                        </Fragment>
+                }
 
-        </AuthContext.Provider>
+            </AuthContext.Provider>
         </ModalContext.Provider>
     );
 };

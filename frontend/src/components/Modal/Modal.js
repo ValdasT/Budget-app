@@ -1,4 +1,4 @@
-import React, { useContext, useState, Fragment } from 'react';
+import React, { useContext, Fragment } from 'react';
 import ModalContext from '../../context/modal-context';
 import { Modal, Button } from 'react-bootstrap';
 

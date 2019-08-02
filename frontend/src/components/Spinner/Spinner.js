@@ -4,7 +4,9 @@ import './Spinner.css';
 
 const spinner = () => (
   <div className="spinner">
-    <div className="lds-dual-ring" />
+    <div class="cssload-inner cssload-one"></div>
+	<div class="cssload-inner cssload-two"></div>
+	<div class="cssload-inner cssload-three"></div>
   </div>
 );
 

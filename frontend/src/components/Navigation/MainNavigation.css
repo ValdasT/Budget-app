@@ -12,17 +12,18 @@
   box-sizing: border-box;
 }
 
-.main-navigation__logo h1 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: #dfcefc;
+.dropdown-toggle:after { content: none }
+
+.main-navigation__logo {
+  margin-right: 20px;
+  color: #ea97c4;
 }
 
 .main-navigation__items {
-  margin-left: 1.5rem;
+  margin-left: auto;
 }
 
-.main-navigation__items ul {
+/* .main-navigation__items ul {
   display: flex;
   list-style: none;
   padding: 0;
@@ -55,4 +56,4 @@
   background: #ffffff;
   color: #5101d1;
   border-radius: 5px;
-}
+} */
