@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component,Fragment } from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
@@ -35,7 +35,7 @@ class App extends Component {
     return (
       <ApolloProvider client={client}>
       <BrowserRouter>
-        <React.Fragment>
+        <Fragment>
           <AuthContext.Provider
             value={{
               token: this.state.token,
@@ -64,7 +64,7 @@ class App extends Component {
               </Switch>
             </main>
           </AuthContext.Provider>
-        </React.Fragment>
+        </Fragment>
       </BrowserRouter>
       </ApolloProvider>
     );

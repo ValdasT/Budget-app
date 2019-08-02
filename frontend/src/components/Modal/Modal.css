@@ -1,4 +1,4 @@
-.modal {
+/* .modal {
   width: 90%;
   background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
@@ -34,4 +34,8 @@
     width: 30rem;
     left: calc((100% - 30rem) / 2);
   }
+} */
+
+.modal-backdrop {
+  z-index: 0;
 }

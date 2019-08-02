@@ -3,13 +3,25 @@ import './Auth.css';
 
 import Spinner from '../components/Spinner/Spinner';
 import AuthContext from '../context/auth-context';
+import ModalContext from '../context/modal-context';
 import SignUp from '../components/SignUp/SignUp';
 import SignIn from '../components/SignIn/SignIn';
+
+import InfoModal from '../components/Modal/Modal';
 
 
 const AuthPage = () => {
     let [isLogin, setisLogin] = useState(false);
     let [isLoading, setIsLoading] = useState(false);
+    let [showModal, setShowModal] = useState(false);
+    let [modalHeader, setModalHeader] = useState('');
+    let [modalText, setModalText] = useState();
+
+    const modalInfo = (show, header, text) => {
+        setShowModal(show);
+        setModalHeader(header);
+        setModalText(text);
+    };
 
     const { login } = useContext(AuthContext);
 
@@ -61,16 +73,14 @@ const AuthPage = () => {
             }
         })
             .then(res => {
-                console.log(res);
-                if (res.status !== 200 && res.status !== 201) {
+                if (!res.ok) {
                     setIsLoading(false);
-                    throw ('Failed!' + res.status);
+                    throw (res.statusText);
                 }
                 return res.json();
             })
             .then(res => {
                 setIsLoading(false);
-                console.log(res);
                 if (res.data.login) {
                     login(
                         res.data.login.token,
@@ -79,12 +89,13 @@ const AuthPage = () => {
 
                     );
                 } else {
-                    console.log('New acc was created!');
+                    modalInfo(true, 'Confirmation','Your account was created. Now You can sign in.');
                     switchModeHandler();
                 }
             })
             .catch(err => {
                 setIsLoading(false);
+                modalInfo(true, 'Oops!',`Your email or password is incorect.`);
                 throw err;
             });
     };
@@ -92,7 +103,9 @@ const AuthPage = () => {
 
 
     return (
+        <ModalContext.Provider value = {{modalHeader,modalText, showModal, setShowModal}}>
         <AuthContext.Provider value={{ submitHandler, switchModeHandler }}>
+            <InfoModal />
             {
                 isLoading ? <Spinner /> :
                     <Fragment>
@@ -103,6 +116,7 @@ const AuthPage = () => {
             }
 
         </AuthContext.Provider>
+        </ModalContext.Provider>
     );
 };
 

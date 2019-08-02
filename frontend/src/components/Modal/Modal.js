@@ -1,26 +1,30 @@
-import React from 'react';
+import React, { useContext, useState, Fragment } from 'react';
+import ModalContext from '../../context/modal-context';
+import { Modal, Button } from 'react-bootstrap';
 
 import './Modal.css';
 
-const modal = props => (
-  <div className="modal">
-    <header className="modal__header">
-      <h1>{props.title}</h1>
-    </header>
-    <section className="modal__content">{props.children}</section>
-    <section className="modal__actions">
-      {props.canCancel && (
-        <button className="btn" onClick={props.onCancel}>
-          Cancel
-        </button>
-      )}
-      {props.canConfirm && (
-        <button className="btn" onClick={props.onConfirm}>
-          {props.confirmText}
-        </button>
-      )}
-    </section>
-  </div>
-);
+const InfoModal = () => {
+    const { modalHeader, modalText, showModal, setShowModal } = useContext(ModalContext);
+    const handleClose = () => setShowModal(false);
 
-export default modal;
+    return (
+        <Fragment>
+            <Modal
+                aria-labelledby="contained-modal-title-vcenter"
+                centered show={showModal} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{modalHeader}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{modalText}</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Ok
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </Fragment>
+    );
+};
+
+export default InfoModal;

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import Modal2 from '../../Modal/Modal2';
+// import Modal2 from '../../Modal/Modal2';
 import ExpensesContext from '../../../context/expenses-context';
 import Backdrop from '../../Backdrop/Backdrop';
 
@@ -32,7 +32,7 @@ const AddExpenseForm = () => {
                 <ExpensesContext.Provider value={{ startAdd, cancelButton }}>
                     <Backdrop />
                     <form onSubmit={addExpense}>
-                        <Modal2 />
+                        {/* <Modal2 /> */}
                         <input value={title} onChange={(e) => setTitle(e.target.value)} />
                         <textarea value={body} onChange={(e) => setBody(e.target.value)}></textarea>
                         <button className='btn'>add expense</button>
