@@ -54,6 +54,8 @@ type User {
   password: String
   name: String!
   surname: String!
+  createdAt: String!
+  updatedAt: String!
   userSettings: [Settings!]
   createdEvents: [Event!]
   createdExpenses: [Expense!]
@@ -84,6 +86,8 @@ input UserInput {
   password: String!
   name: String!
   surname: String!
+  createdAt: String!
+  updatedAt: String!
 }
 
 input FileInput {

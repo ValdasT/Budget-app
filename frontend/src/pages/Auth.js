@@ -30,6 +30,7 @@ const AuthPage = () => {
     };
 
     const submitHandler = (values) => {
+        let time = JSON.stringify(new Date().getTime());
         setIsLoading(true);
         let query = {
             query: `
@@ -49,8 +50,8 @@ const AuthPage = () => {
         if (isLogin) {
             query = {
                 query: `
-            mutation CreateUser($email: String!, $password: String!, $name: String!, $surname: String!) {
-              createUser(userInput: {email: $email, password: $password, name: $name, surname: $surname}) {
+            mutation CreateUser($email: String!, $password: String!, $name: String!, $surname: String!, $createdAt: String!, $updatedAt: String!) {
+              createUser(userInput: {email: $email, password: $password, name: $name, surname: $surname, createdAt: $createdAt, updatedAt: $updatedAt}) {
                 _id
                 email
               }
@@ -60,11 +61,12 @@ const AuthPage = () => {
                     email: values.email,
                     password: values.password,
                     name: values.firstName,
-                    surname: values.lastName
+                    surname: values.lastName,
+                    createdAt: time,
+                    updatedAt: time
                 }
             };
         }
-
         fetch('/graphql', {
             method: 'POST',
             body: JSON.stringify(query),
@@ -89,7 +91,7 @@ const AuthPage = () => {
 
                     );
                 } else {
-                    modalInfo(true, 'Confirmation','Your account was created. Now You can sign in.');
+                    modalInfo(true, 'Confirmation',`Hi ${values.firstName} ${values.lastName}, your account was created. Now You can sign in.`);
                     switchModeHandler();
                 }
             })
