@@ -1,41 +1,36 @@
-/* .modal {
-  width: 90%;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  position: fixed;
-  top: 20vh;
-  left: 5%;
-  z-index: 100;
+.react-datepicker-wrapper, .react-datepicker__input-container {
+  display: block !important;
 }
 
-.modal__header {
-  padding: 1rem;
-  background: #5101d1;
-  color: white;
-}
+ /* .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list {
+  padding-left: unset;
+  padding-right: 20px;
+ width: 100px; 
+ } */
 
-.modal__header h1 {
-  margin: 0;
-  font-size: 1.25rem;
-}
 
-.modal__content {
-  padding: 1rem;
-}
-
-.modal__actions {
-  display: flex;
-  justify-content: flex-end;
-  padding: 1rem;
-}
-
-@media (min-width: 768px) {
-  .modal {
-    width: 30rem;
-    left: calc((100% - 30rem) / 2);
-  }
+/* .react-datepicker__input-container {
+  width:100%;
 } */
 
+.input-group-append{
+
+  width:auto;
+  max-width: 17%;
+}
+
+.react-datepicker-wrapper {
+  width:83%;
+}
+
+/* .react-datepicker {
+  width: 313px;
+} */
+
+.not-round-right-corner{
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
 .modal-backdrop {
   z-index: 0;
 }

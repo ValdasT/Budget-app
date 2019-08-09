@@ -4,6 +4,7 @@ import ExpensesContext from '../../../context/expenses-context';
 import ModalContext from '../../../context/modal-context';
 import AddExpenseModal from '../../Modal/AddExpenseModal';
 // import Backdrop from '../../Backdrop/Backdrop';
+import '../../../pages/Expenses.css';
 
 const AddExpenseForm = () => {
     const { dispatch } = useContext(ExpensesContext);
@@ -113,12 +114,20 @@ const AddExpenseForm = () => {
 
     return (
         <div>
+
+
+            <div className="expenses-control">
+                <div className="card-body text-center">
+                    <p className="card-text">Collect all your expenses</p>
+                    <button className='btn btn-primary' onClick={() => modalInfo(!showModal, 'sdsdsdsdsdsdsadasdasdasd', 'asdasdasdasdasdasdasdasdasdasdasd')}>add expense</button>
+                </div>
+            </div>
+
             {/* <button className='btn btn-primary' onClick={() => setStartAdd(startAdd = !startAdd)}>add expense</button> */}
-            <button className='btn btn-primary' onClick={() => modalInfo(!showModal,'sdsdsdsdsdsdsadasdasdasd','asdasdasdasdasdasdasdasdasdasdasd')}>add expense</button>
+
             {showModal && (
                 <ModalContext.Provider value={{ modalHeader, modalText, showModal, setShowModal }}>
-                    test
-                    <AddExpenseModal/>
+                    <AddExpenseModal />
                     {/* <ExpensesContext.Provider value={{ startAdd, cancelButton }}>
                     <form onSubmit={addExpense}>
                         <input value={title} onChange={(e) => setTitle(e.target.value)} />

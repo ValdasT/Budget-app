@@ -24,9 +24,9 @@ const Expenses = () => {
 
 
     return (
+        
         <ExpensesContext.Provider value={{ expenses, dispatch }}>
-            <h4>Expenses</h4>
-            <AddExpense />
+            <AddExpense/>
             <ExpenseList/>
         </ExpensesContext.Provider>
     );
