@@ -1,7 +1,7 @@
-.events_list-item {
+/* .events_list-item {
     margin: 1rem 0;
     padding: 1rem;
-    border: 1px solid #5101d1;
+    border: 1px solid #9ea7b0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -21,4 +21,86 @@
   
   .events_list-item p {
       margin: 0;
+  } */
+  
+  .card {
+    position: relative;
+    margin: 10px 10px;
+    /* padding: 10px 10px 10px; */
+    float: left;
+    width: 200px;
+    max-width: 300px;
+    height: 250px;
+    -webkit-box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.3);
+    /* cursor: pointer; */
+    transition: 0.4s;
   }
+  
+  /* .card .card_image {
+    width: inherit;
+    height: inherit;
+    border-radius: 40px;
+  } */
+  
+  /* .card .card_image img {
+    width: inherit;
+    height: inherit;
+    border-radius: 40px;
+    object-fit: cover;
+  } */
+  
+  .card .card_title {
+    /* background-color: rgb(249, 248, 248); */
+    text-align: center;
+    /* border-radius: 0px 0px 40px 40px; */
+    /* font-family: sans-serif; */
+    font-weight: bold;
+    font-size: 15px;
+    margin: 5px;
+    height: 40px;
+  }
+  
+  .card:hover {
+    transform: scale(1.1, 1.1);
+    -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+  }
+  
+  .title-white {
+    color: rgb(82, 79, 79);
+  }
+  
+  .title-black {
+    color: rgb(218, 16, 16);
+  }
+  
+  /* @media (max-width: 40em) {
+    .card{
+
+    }
+  } */
+
+  @media all and (max-width: 500px) {
+    .card-list {
+      /* On small screens, we are no longer using row direction but column */
+      flex-direction: column;
+    }
+  }
+  
+  
+  /*
+  .card {
+    margin: 30px auto;
+    width: 300px;
+    height: 300px;
+    border-radius: 40px;
+    background-image: url('https://i.redd.it/b3esnz5ra34y.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-repeat: no-repeat;
+  box-shadow: 5px 5px 30px 7px rgba(0,0,0,0.25), -5px -5px 30px 7px rgba(0,0,0,0.22);
+    transition: 0.4s;
+  }
+  */

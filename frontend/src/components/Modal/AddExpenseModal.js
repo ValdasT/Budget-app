@@ -12,14 +12,8 @@ import { MdEuroSymbol } from 'react-icons/md';
 import 'react-datepicker/dist/react-datepicker.css';
 import './Modal.css';
 
-const dummyFunction = (fields) => {
-    let time = moment(fields.date).valueOf();
-    console.log(time);
-    console.log(fields);
-};
-
 const formatDate = (pleaseformat) => {
-    return moment(pleaseformat).format('MM/DD/YYYY');
+    return moment(pleaseformat).format('MM-DD-YYYY');
 };
 
 const validatePrice = (event) => {
@@ -38,8 +32,9 @@ const validatePrice = (event) => {
 };
 
 const AddExpenseModal = () => {
-    const { modalHeader, modalText, showModal, setShowModal } = useContext(ModalContext);
+    const {submitExpense, showModal, setShowModal } = useContext(ModalContext);
     const handleClose = () => setShowModal(!showModal);
+    let time = moment().format('MM-DD-YYYY');
 
     return (
         <Fragment>
@@ -56,7 +51,7 @@ const AddExpenseModal = () => {
                             description: '',
                             group: '',
                             price: '',
-                            date: moment(new Date()).format('MM/DD/YYYY')
+                            date: time
                         }}
                         validationSchema={Yup.object().shape({
                             title: Yup.string()
@@ -70,8 +65,7 @@ const AddExpenseModal = () => {
                                 .required('Date is required')
                         })}
                         onSubmit={fields => {
-                            dummyFunction(fields);
-                            // submitHandler(fields);
+                            submitExpense(fields);
                         }}
 
                         render={({ errors, values, touched, handleChange, setFieldValue, handleBlur, }) => (

@@ -1,143 +1,106 @@
-import React, { useState, useContext } from 'react';
-// import Modal2 from '../../Modal/Modal2';
+import React, { useState, useContext, Fragment } from 'react';
+import moment from 'moment';
 import ExpensesContext from '../../../context/expenses-context';
 import ModalContext from '../../../context/modal-context';
 import AddExpenseModal from '../../Modal/AddExpenseModal';
-// import Backdrop from '../../Backdrop/Backdrop';
+import Spinner from '../../Spinner/Spinner';
+import InfoModal from '../../Modal/Modal';
 import '../../../pages/Expenses.css';
 
 const AddExpenseForm = () => {
-    const { dispatch } = useContext(ExpensesContext);
-    const [title, setTitle] = useState('');
-    const [body, setBody] = useState('');
+    const { currentUser, allExpenses, setallExpenses } = useContext(ExpensesContext);
     let [showModal, setShowModal] = useState(false);
     let [modalHeader, setModalHeader] = useState('');
     let [modalText, setModalText] = useState();
+    let [isLoading, setIsLoading] = useState(false);
+    let [showInfoModal, setShowInfoModal] = useState(false);
 
     const modalInfo = (show, header, text) => {
-        setShowModal(show);
+        setShowInfoModal(show);
         setModalHeader(header);
         setModalText(text);
     };
 
+    const submitExpense = (fields) => {
+        setIsLoading(true);
+        let time = JSON.stringify(moment(fields.date).valueOf());
+        const requestBody = {
+            query: `
+                      mutation CreateExpense($title: String!, $description: String, $price: String!, $group: String!, $createdAt: String!, $updatedAt: String! ) {
+                        createExpense(expenseInput:{title: $title, description: $description, price: $price, group:$group, createdAt:$createdAt, updatedAt: $updatedAt}) {
+                            _id
+                            title
+                            price
+                            createdAt
+                          }
+                      }
+                    `,
+            variables: {
+                title: fields.title,
+                description: fields.description,
+                price: fields.price,
+                group: fields.group,
+                createdAt: time,
+                updatedAt: time
+            }
+        };
 
-    const addExpense = (e) => {
-        e.preventDefault();
-        dispatch({
-            type: 'ADD_EXPENSE',
-            title,
-            body
-        });
-        setTitle('');
-        setBody('');
+        fetch('/graphql', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + currentUser.token
+            }
+        })
+            .then(res => {
+                if (!res.ok) {
+                    setIsLoading(false);
+                        throw (res.statusText);
+                }
+                return res.json();
+            })
+            .then(res => {
+                if (res.errors) {
+                    throw (res.errors[0].message);
+                }
+                setIsLoading(false);
+                setShowModal(false);
+                modalInfo(true, 'Confirmation', 'Expense was created');
+                setallExpenses([...allExpenses, res.data.createExpense]);
+                console.log(res.data.createExpense);
+            })
+            .catch(err => {
+                setIsLoading(false);
+                setShowModal(false);
+                console.log(err);
+                modalInfo(true, 'Error', err);
+                throw err;
+            });
     };
 
-
-
-    // modalConfirmHandler = () => {
-    //     this.setState({ creating: false });
-    //     const title = this.titleElRef.current.value;
-    //     const price = +this.priceElRef.current.value;
-    //     const date = this.dateElRef.current.value;
-    //     const description = this.descriptionElRef.current.value;
-    
-    //     if (
-    //       title.trim().length === 0 ||
-    //       price <= 0 ||
-    //       date.trim().length === 0 ||
-    //       description.trim().length === 0
-    //     ) {
-    //       return;
-    //     }
-    
-    //     const event = { title, price, date, description };
-    //     console.log(event);
-    
-    //     const requestBody = {
-    //       query: `
-    //           mutation CreateEvent($title: String!, $desc: String!, $price: Float!, $date: String!) {
-    //             createEvent(eventInput: {title: $title, description: $desc, price: $price, date: $date}) {
-    //               _id
-    //               title
-    //               description
-    //               date
-    //               price
-    //             }
-    //           }
-    //         `,
-    //         variables: {
-    //           title: title,
-    //           desc: description,
-    //           price: price,
-    //           date: date
-    //         }
-    //     };
-    
-    //     const token = this.context.token;
-    
-    //     fetch('http://localhost:8000/graphql', {
-    //       method: 'POST',
-    //       body: JSON.stringify(requestBody),
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         Authorization: 'Bearer ' + token
-    //       }
-    //     })
-    //       .then(res => {
-    //         if (res.status !== 200 && res.status !== 201) {
-    //           throw new Error('Failed!');
-    //         }
-    //         return res.json();
-    //       })
-    //       .then(resData => {
-    //         this.setState(prevState => {
-    //           const updatedEvents = [...prevState.events];
-    //           updatedEvents.push({
-    //             _id: resData.data.createEvent._id,
-    //             title: resData.data.createEvent.title,
-    //             description: resData.data.createEvent.description,
-    //             date: resData.data.createEvent.date,
-    //             price: resData.data.createEvent.price,
-    //             creator: {
-    //               _id: this.context.userId
-    //             }
-    //           });
-    //           return { events: updatedEvents };
-    //         });
-    //       })
-    //       .catch(err => {
-    //         console.log(err);
-    //       });
-    // };
-    
-
-
     return (
-        <div>
-
-
-            <div className="expenses-control">
-                <div className="card-body text-center">
-                    <p className="card-text">Collect all your expenses</p>
-                    <button className='btn btn-primary' onClick={() => modalInfo(!showModal, 'sdsdsdsdsdsdsadasdasdasd', 'asdasdasdasdasdasdasdasdasdasdasd')}>add expense</button>
-                </div>
-            </div>
-
-            {/* <button className='btn btn-primary' onClick={() => setStartAdd(startAdd = !startAdd)}>add expense</button> */}
-
-            {showModal && (
-                <ModalContext.Provider value={{ modalHeader, modalText, showModal, setShowModal }}>
-                    <AddExpenseModal />
-                    {/* <ExpensesContext.Provider value={{ startAdd, cancelButton }}>
-                    <form onSubmit={addExpense}>
-                        <input value={title} onChange={(e) => setTitle(e.target.value)} />
-                        <textarea value={body} onChange={(e) => setBody(e.target.value)}></textarea>
-                        <button className='btn'>add expense</button>
-                    </form>
-                    </ExpensesContext.Provider> */}
-                </ModalContext.Provider>
-            )}
-        </div>
+        <Fragment>
+            <ModalContext.Provider value={{ showInfoModal, setShowInfoModal, submitExpense, modalHeader, modalText, showModal, setShowModal }}>
+                {
+                    isLoading ? <Spinner /> :
+                        <Fragment>
+                            <InfoModal />
+                            <div className="expenses-control">
+                                <div className="card-body text-center">
+                                    <p className="card-text">Collect all your expenses</p>
+                                    <button className='btn btn-primary' onClick={() => setShowModal(!showModal)}>add expense</button>
+                                </div>
+                            </div>
+                            {showModal && (
+                                <Fragment>
+                                    <AddExpenseModal />
+                                </Fragment>
+                            )}
+                        </Fragment>
+                }
+            </ModalContext.Provider>
+        </Fragment >
     );
 };
 

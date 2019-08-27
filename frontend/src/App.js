@@ -47,8 +47,10 @@ class App extends Component {
             <MainNavigation />
             <main className="main-content">
               <Switch>
-                <Route path="/test" component={TestPage} />
+                  <Route path="/test" component={TestPage} />
+                  {this.state.token && (
                 <Route path="/expenses" component={expenses} />
+                )}
                 {this.state.token && <Redirect from="/" to="/events" exact />}
                 {this.state.token && (
                   <Redirect from="/auth" to="/expenses" exact />

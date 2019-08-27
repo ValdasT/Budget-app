@@ -59,6 +59,14 @@ const transformEvent = event => {
   };
 };
 
+const transformExpense = expense => {
+  return {
+    ...expense._doc,
+    _id: expense.id,
+    creator: user.bind(this, expense.creator)
+  }
+}
+
 const transformBooking = booking => {
   return {
     ...booking._doc,
@@ -71,6 +79,7 @@ const transformBooking = booking => {
 };
 
 exports.transformEvent = transformEvent;
+exports.transformExpense = transformExpense;
 exports.transformBooking = transformBooking;
 
 // exports.user = user;

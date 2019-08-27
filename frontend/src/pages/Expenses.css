@@ -4,8 +4,13 @@
     background-color: #fff;
     border-radius: .25rem;
     word-wrap: break-word;
-    /* padding: 1rem; */
     margin: 2rem auto;
     width: 30rem;
     max-width: 80%;
+  }
+
+  .center{
+    margin: 0 auto;
+    width: 90%;
+    text-align: center;
   }

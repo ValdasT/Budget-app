@@ -5,14 +5,14 @@ import { Modal, Button } from 'react-bootstrap';
 import './Modal.css';
 
 const InfoModal = () => {
-    const { modalHeader, modalText, showModal, setShowModal } = useContext(ModalContext);
-    const handleClose = () => setShowModal(false);
+    const { modalHeader, modalText, showInfoModal, setShowInfoModal } = useContext(ModalContext);
+    const handleClose = () => setShowInfoModal(false);
 
     return (
         <Fragment>
             <Modal
                 aria-labelledby="contained-modal-title-vcenter"
-                centered show={showModal} onHide={handleClose}>
+                centered show={showInfoModal} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>{modalHeader}</Modal.Title>
                 </Modal.Header>

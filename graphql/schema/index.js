@@ -21,8 +21,9 @@ type Event {
 type Expense {
   _id: ID!
   title: String!
-  description: String!
-  price: Float!
+  description: String
+  price: String!
+  group: String!
   createdAt: String!
   updatedAt: String!
   creator: User!
@@ -32,7 +33,7 @@ type Income {
   _id: ID!
   title: String!
   description: String!
-  price: Float!
+  price: String!
   createdAt: String!
   updatedAt: String!
   creator: User!
@@ -95,9 +96,19 @@ input FileInput {
   description: String!
 }
 
+input ExpenseInput {
+  title: String!
+  description: String
+  price: String!
+  group: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
 type RootQuery {
     allFiles: [File!]!
     events: [Event!]!
+    expenses: [Expense!]!
     bookings: [Booking!]!
     login(email: String!, password: String!): AuthData!
 }
@@ -106,6 +117,8 @@ type RootMutation {
     createFile(fileInput: FileInput): File
     deleteFile(fileId: ID!): File
     updateFile(fileId: ID!): File
+
+    createExpense(expenseInput: ExpenseInput): Expense
 
     createEvent(eventInput: EventInput): Event
     createUser(userInput: UserInput): User

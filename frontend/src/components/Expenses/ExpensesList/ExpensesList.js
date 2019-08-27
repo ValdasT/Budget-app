@@ -1,14 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useContext} from 'react';
 import Expense from './Expense/Expense';
 import ExpensesContext from '../../../context/expenses-context';
 import './ExpensesList.css';
 
 const Expenselist = () => {
-    const { expenses } = useContext(ExpensesContext);
+    const { allExpenses } = useContext(ExpensesContext);
 
-    return expenses.map((expense) => (
-        <Expense className = 'expenses_list' key={expense.title} expense={expense} />
-    ));
+    return (
+        allExpenses.map((expense) => (
+            <Expense className='expenses_list' key={expense._id} expense={expense} />
+        )
+        )
+    );
+
 };
-
+        
 export { Expenselist as default };

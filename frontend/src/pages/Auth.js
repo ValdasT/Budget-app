@@ -13,12 +13,12 @@ import InfoModal from '../components/Modal/Modal';
 const AuthPage = () => {
     let [isLogin, setisLogin] = useState(false);
     let [isLoading, setIsLoading] = useState(false);
-    let [showModal, setShowModal] = useState(false);
+    let [showInfoModal, setShowInfoModal] = useState(false);
     let [modalHeader, setModalHeader] = useState('');
     let [modalText, setModalText] = useState();
 
     const modalInfo = (show, header, text) => {
-        setShowModal(show);
+        setShowInfoModal(show);
         setModalHeader(header);
         setModalText(text);
     };
@@ -105,7 +105,7 @@ const AuthPage = () => {
 
 
     return (
-        <ModalContext.Provider value={{ modalHeader, modalText, showModal, setShowModal }}>
+        <ModalContext.Provider value={{ modalHeader, modalText, showInfoModal, setShowInfoModal }}>
             <AuthContext.Provider value={{ submitHandler, switchModeHandler }}>
                 <InfoModal />
                 {
