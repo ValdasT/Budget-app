@@ -8,7 +8,7 @@ const Expenselist = () => {
 
     return (
         allExpenses.map((expense) => (
-            <Expense className='expenses_list' key={expense._id} expense={expense} />
+            <Expense className='expenses_list' key={expense._id} expense={expense}/>
         )
         )
     );

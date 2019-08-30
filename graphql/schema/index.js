@@ -119,6 +119,7 @@ type RootMutation {
     updateFile(fileId: ID!): File
 
     createExpense(expenseInput: ExpenseInput): Expense
+    removeExpense(expenseId: ID!): Expense!
 
     createEvent(eventInput: EventInput): Event
     createUser(userInput: UserInput): User

@@ -4,20 +4,20 @@ const User = require('../../models/user');
 const { transformExpense } = require('./merge');
 
 module.exports = {
-    // expenses: async (args,req) => {
-    //     if (!req.isAuth) {
-    //               throw new Error('Unauthenticated!');
-    //             }
-    //     try {
-    //       const expenses = await Expense.find();
-    //       return expenses.map(expense => {
-    //         return transformExpense(expense);
-    //       });
-    //     } catch (err) {
-    //       throw err;
-    //     }
-    // },
-    
+
+  removeExpense: async (args, req) => {
+    if (!req.isAuth) {
+      throw new Error('Unauthenticated!');
+    }
+    try {
+      const expense = await Expense.findById(args.expenseId).populate('expense');
+      await Expense.deleteOne({ _id: args.expenseId });
+      return expense;
+    } catch (err) {
+      throw err;
+    }
+  },
+  
     expenses: async (args, req) => {
         if (!req.isAuth) {
           throw new Error('Unauthenticated!');

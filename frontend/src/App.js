@@ -7,7 +7,7 @@ import AuthPage from './pages/Auth';
 import BookingsPage from './pages/Bookings';
 import EventsPage from './pages/Events';
 import TestPage from './pages/Test';
-import expenses from './pages/Expenses';
+import Expenses from './pages/Expenses';
 import MainNavigation from './components/Navigation/MainNavigation';
 import AuthContext from './context/auth-context';
 
@@ -46,12 +46,12 @@ class App extends Component {
           >
             <MainNavigation />
             <main className="main-content">
-              <Switch>
+                <Switch>
                   <Route path="/test" component={TestPage} />
                   {this.state.token && (
-                <Route path="/expenses" component={expenses} />
+                <Route path="/expenses" component={Expenses} />
                 )}
-                {this.state.token && <Redirect from="/" to="/events" exact />}
+                {this.state.token && <Redirect from="/" to="/expenses" exact />}
                 {this.state.token && (
                   <Redirect from="/auth" to="/expenses" exact />
                 )}

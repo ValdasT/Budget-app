@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
+  // res.cookie('token', token, {maxAge: 360000});
   const authHeader = req.get('Authorization');
   if (!authHeader) {
     req.isAuth = false;

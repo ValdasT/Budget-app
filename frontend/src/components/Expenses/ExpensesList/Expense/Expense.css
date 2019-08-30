@@ -1,65 +1,92 @@
-/* .events_list-item {
-    margin: 1rem 0;
-    padding: 1rem;
-    border: 1px solid #9ea7b0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .events_list-item h1 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: #5101d1;
-  }
-  
-  .events_list-item h2 {
-      margin: 0;
-      font-size: 1rem;
-      color: #7c7c7c;
-  }
-  
-  .events_list-item p {
-      margin: 0;
-  } */
-  
-  .card {
+    .card {
     position: relative;
-    margin: 10px 10px;
-    /* padding: 10px 10px 10px; */
+    margin: 7px 7px;
     float: left;
-    width: 200px;
-    max-width: 300px;
-    height: 250px;
+    /* width: 220px; */
+    width: 18%;
+    height: 200px;
     -webkit-box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.3);
   box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.3);
-    /* cursor: pointer; */
     transition: 0.4s;
   }
   
-  /* .card .card_image {
-    width: inherit;
-    height: inherit;
-    border-radius: 40px;
-  } */
-  
-  /* .card .card_image img {
-    width: inherit;
-    height: inherit;
-    border-radius: 40px;
-    object-fit: cover;
-  } */
-  
-  .card .card_title {
-    /* background-color: rgb(249, 248, 248); */
+  .card_title {
+    font-weight: bold;
+    font-family: 'Kurale', serif;
+    /* font-family: 'Alegreya', serif; */
+    overflow-y: scroll;
     text-align: center;
-    /* border-radius: 0px 0px 40px 40px; */
-    /* font-family: sans-serif; */
     font-weight: bold;
     font-size: 15px;
     margin: 5px;
     height: 40px;
+    color: #686868;
   }
+
+  .card_date{
+    text-align: center;
+    font-size: 12px;
+    margin: 5px;
+    color: #686868;
+  }
+
+  .card_group{
+    text-align: center;
+    font-size: 12px;
+    color: #686868;
+  }
+
+  .card_description {
+    overflow-y: scroll;
+    font-family: 'Alegreya', serif;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 5px;
+    height: 65px;
+    color: #686868;
+  }
+
+  .card_price {
+    position: absolute;
+    bottom:0;
+    left:0;
+    color: #bd0909 !important;
+    padding: 5px;
+    margin-left: 5px;
+    display: inline-block;
+    /* transition: all 0.4s ease 0s; */
+    }
+
+  .card_editButton {
+    position: absolute;
+    bottom:0;
+    right:30px;
+    color: #686868 !important;
+    padding: 5px;
+    display: inline-block;
+    transition: all 0.4s ease 0s;
+    }
+
+    .card_editButton:hover {
+      color: #1d8c07 !important;
+      transition: all 0.4s ease 0s;
+      }
+
+  .card_removeButton {
+    position: absolute;
+    bottom:0;
+    right:0;
+    color: #686868 !important;
+    padding: 5px;
+    display: inline-block;
+    transition: all 0.4s ease 0s;
+    }
+
+    .card_removeButton:hover {
+      color: #a90f0f !important;
+      transition: all 0.4s ease 0s;
+      }
   
   .card:hover {
     transform: scale(1.1, 1.1);
@@ -67,40 +94,18 @@
     box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
   }
   
-  .title-white {
-    color: rgb(82, 79, 79);
-  }
-  
   .title-black {
-    color: rgb(218, 16, 16);
+    color: #da1010;
   }
-  
-  /* @media (max-width: 40em) {
-    .card{
 
+  @media (max-width: 60em) {
+    .card {
+      width: 100%;
     }
-  } */
+  }
 
   @media all and (max-width: 500px) {
     .card-list {
-      /* On small screens, we are no longer using row direction but column */
       flex-direction: column;
     }
   }
-  
-  
-  /*
-  .card {
-    margin: 30px auto;
-    width: 300px;
-    height: 300px;
-    border-radius: 40px;
-    background-image: url('https://i.redd.it/b3esnz5ra34y.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-repeat: no-repeat;
-  box-shadow: 5px 5px 30px 7px rgba(0,0,0,0.25), -5px -5px 30px 7px rgba(0,0,0,0.22);
-    transition: 0.4s;
-  }
-  */

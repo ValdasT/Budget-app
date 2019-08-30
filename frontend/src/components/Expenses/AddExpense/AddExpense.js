@@ -8,7 +8,7 @@ import InfoModal from '../../Modal/Modal';
 import '../../../pages/Expenses.css';
 
 const AddExpenseForm = () => {
-    const { currentUser, allExpenses, setallExpenses } = useContext(ExpensesContext);
+    const { currentUser, allExpenses, setAllExpenses} = useContext(ExpensesContext);
     let [showModal, setShowModal] = useState(false);
     let [modalHeader, setModalHeader] = useState('');
     let [modalText, setModalText] = useState();
@@ -32,6 +32,8 @@ const AddExpenseForm = () => {
                             title
                             price
                             createdAt
+                            description
+                            group
                           }
                       }
                     `,
@@ -67,7 +69,7 @@ const AddExpenseForm = () => {
                 setIsLoading(false);
                 setShowModal(false);
                 modalInfo(true, 'Confirmation', 'Expense was created');
-                setallExpenses([...allExpenses, res.data.createExpense]);
+                setAllExpenses([...allExpenses, res.data.createExpense]);
                 console.log(res.data.createExpense);
             })
             .catch(err => {
@@ -89,7 +91,7 @@ const AddExpenseForm = () => {
                             <div className="expenses-control">
                                 <div className="card-body text-center">
                                     <p className="card-text">Collect all your expenses</p>
-                                    <button className='btn btn-primary' onClick={() => setShowModal(!showModal)}>add expense</button>
+                                    <button className='btn btn_addExpense' onClick={() => setShowModal(!showModal)}>add expense</button>
                                 </div>
                             </div>
                             {showModal && (
