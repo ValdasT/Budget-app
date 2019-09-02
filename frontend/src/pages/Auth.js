@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useContext } from 'react';
+import React, { useState, Fragment, useContext, useEffect } from 'react';
 import './Auth.css';
 
 import Spinner from '../components/Spinner/Spinner';
@@ -17,6 +17,10 @@ const AuthPage = () => {
     let [modalHeader, setModalHeader] = useState('');
     let [modalText, setModalText] = useState();
 
+    useEffect(() => {
+        cookie();
+    }, []);
+
     const modalInfo = (show, header, text) => {
         setShowInfoModal(show);
         setModalHeader(header);
@@ -27,6 +31,26 @@ const AuthPage = () => {
 
     const switchModeHandler = () => {
         return setisLogin(!isLogin);
+    };
+
+    const cookie = () => {
+        fetch('/cookie', {
+            method: 'GET',
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json())
+            .then(data => {
+
+                login(
+                    data.response.token,
+                    data.response.userId
+                );
+            })
+            .catch(err => {
+                console.log('There is no cookie!');
+            });
     };
 
     const submitHandler = (values) => {
@@ -101,8 +125,6 @@ const AuthPage = () => {
                 throw err;
             });
     };
-
-
 
     return (
         <ModalContext.Provider value={{ modalHeader, modalText, showInfoModal, setShowInfoModal }}>

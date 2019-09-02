@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const cookieParser = require('cookie-parser')
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const graphQlSchema = require('./graphql/schema/index');
@@ -20,32 +21,36 @@ app.use(cors());
 
 app.use(cookieParser());
 
-// app.use('/cookies', (req, res) => { 
-//   console.log('Cookies: ', req.cookies);
-//   // console.log('dsdsdsdasdasdasdasdasd');
-//   let test = 'dfdfsdgggg'
-//   res.json({test,test});
-//   // res.send('welcome to express app'); 
-//   }); 
+app.get('/cookie', (req, res, next) => {
+  let response = {};
+  response.token = req.cookies.token;
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(response.token, 'somesupersecretkey');
+  } catch (err) {
+    response.isAuth = false;
+    return next();
+  }
+  if (!decodedToken) {
+    response.isAuth = false;
+    return next();
+  }
+  response.isAuth = true;
+  response.userId = decodedToken.userId;
+  res.json({ response, response });
+}); 
 
-// app.use(function (req, res, next) {
-//   // check if client sent cookie
-//   var cookie = req.cookies.cookieName;
-//   if (cookie === undefined)
-//   {
-//     // no: set a new cookie
-//     var randomNumber=Math.random().toString();
-//     randomNumber=randomNumber.substring(2,randomNumber.length);
-//     res.cookie('cookieName',randomNumber, { maxAge: 900000, httpOnly: true });
-//     console.log('cookie created successfully');
-//   } 
-//   else
-//   {
-//     // yes, cookie was already present 
-//     console.log('cookie exists', cookie);
-//   } 
-//   next(); // <-- important!
-// });
+app.get('/removeCookie', (req, res, next) => {
+  let response = {}
+  try {
+    res.clearCookie('token');
+    response = { message: 'Cookie monster ate your cookie!' };
+  } catch (err) {
+    console.log(err);
+    return next();
+  }
+  res.json({ response, response });
+}); 
 
 app.use(isAuth);
 

@@ -1,4 +1,4 @@
-import React, { Component,Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
@@ -28,6 +28,19 @@ class App extends Component {
   };
 
   logout = () => {
+      fetch('/removeCookie', {
+          method: 'GET',
+          credentials: "same-origin",
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      }).then(res => res.json())
+          .then(data => {
+            console.log(data.response.message);
+          })
+          .catch(err => {
+              console.log(err);
+          });
     this.setState({ token: null, userId: null });
   };
 

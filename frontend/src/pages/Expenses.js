@@ -87,7 +87,6 @@ const Expenses = () => {
         })
             .then(res => {
                 setIsLoading(false);
-                console.log(res);
                 if (res.status !== 200 && res.status !== 201) {
                     throw new Error('Failed!');
                 }
@@ -96,7 +95,7 @@ const Expenses = () => {
             .then(resData => {
                 setIsLoading(false);
                 setAllExpenses(resData.data.expenses);
-                console.log(resData);
+                console.log(resData.data.expenses);
 
             })
             .catch(err => {
