@@ -13,6 +13,7 @@ import AuthContext from '../context/auth-context';
 const Expenses = () => {
     let currentUser = AuthContext._currentValue;
     let [isLoading, setIsLoading] = useState(false);
+    let [showModal, setShowModal] = useState(false);
     let [allExpenses, setAllExpenses] = useState([]);
     let [modalHeader, setModalHeader] = useState('');
     let [modalText, setModalText] = useState();
@@ -115,6 +116,67 @@ const Expenses = () => {
             });
     };
 
+    const submitExpense = fields => {
+        setIsLoading(true);
+        let time = convertTimeToMs(fields.date);
+        const requestBody = {
+            query: `
+                      mutation CreateExpense($title: String!, $description: String, $price: String!, $group: String!, $createdAt: String!, $updatedAt: String! ) {
+                        createExpense(expenseInput:{title: $title, description: $description, price: $price, group:$group, createdAt:$createdAt, updatedAt: $updatedAt}) {
+                            _id
+                            title
+                            price
+                            createdAt
+                            updatedAt
+                            description
+                            group
+                          }
+                      }
+                    `,
+            variables: {
+                title: fields.title,
+                description: fields.description,
+                price: fields.price,
+                group: fields.group,
+                createdAt: time,
+                updatedAt: time
+            }
+        };
+
+        fetch('/graphql', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + currentUser.token
+            }
+        })
+            .then(res => {
+                if (!res.ok) {
+                    setIsLoading(false);
+                    throw (res.statusText);
+                }
+                return res.json();
+            })
+            .then(res => {
+                if (res.errors) {
+                    throw (res.errors[0].message);
+                }
+                setIsLoading(false);
+                setShowModal(false);
+                modalInfo(true, 'Confirmation', 'Expense was created');
+                setAllExpenses([...allExpenses, res.data.createExpense]);
+                console.log(res.data.createExpense);
+            })
+            .catch(err => {
+                setIsLoading(false);
+                setShowModal(false);
+                console.log(err);
+                modalInfo(true, 'Error', err);
+                throw err;
+            });
+    };
+
     const updateExpense = expense => {
         setIsLoading(true);
         expense.date = convertTimeToMs(expense.date);
@@ -191,8 +253,8 @@ const Expenses = () => {
     };
 
     return (
-        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense }}>
-            <ModalContext.Provider value={{ showInfoModal, setShowInfoModal,  modalHeader, modalText}}>
+        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading }}>
+            <ModalContext.Provider value={{ showInfoModal, setShowInfoModal,  modalHeader, modalText, showModal, submitExpense, setShowModal, modalInfo}}>
                 {
                     isLoading ? <Spinner /> :
                         <Fragment>
