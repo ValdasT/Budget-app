@@ -32,6 +32,7 @@ const AddExpenseForm = () => {
                             title
                             price
                             createdAt
+                            updatedAt
                             description
                             group
                           }
@@ -58,7 +59,7 @@ const AddExpenseForm = () => {
             .then(res => {
                 if (!res.ok) {
                     setIsLoading(false);
-                        throw (res.statusText);
+                    throw (res.statusText);
                 }
                 return res.json();
             })

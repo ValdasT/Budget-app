@@ -1,8 +1,10 @@
-import React, { useEffect, useState, useReducer, Fragment } from 'react';
-import expensesReducer from '../reducers/expenses';
+import React, { useEffect, useState, Fragment } from 'react';
+import moment from 'moment';
 import ExpensesContext from '../context/expenses-context';
+import ModalContext from '../context/modal-context';
 import ExpenseList from '../components/Expenses/ExpensesList/ExpensesList';
 import AddExpense from '../components/Expenses/AddExpense/AddExpense';
+import InfoModal from '../components/Modal/Modal';
 import Spinner from '../components/Spinner/Spinner';
 import './Expenses.css';
 
@@ -12,6 +14,15 @@ const Expenses = () => {
     let currentUser = AuthContext._currentValue;
     let [isLoading, setIsLoading] = useState(false);
     let [allExpenses, setAllExpenses] = useState([]);
+    let [modalHeader, setModalHeader] = useState('');
+    let [modalText, setModalText] = useState();
+    let [showInfoModal, setShowInfoModal] = useState(false);
+
+    const modalInfo = (show, header, text) => {
+        setShowInfoModal(show);
+        setModalHeader(header);
+        setModalText(text);
+    };
 
     useEffect(() => {
         getExpenseList();
@@ -49,7 +60,7 @@ const Expenses = () => {
             .then(res => {
                 let newExpensesList = [];
                 allExpenses.forEach(expense => {
-                    if (expense._id != res.data.removeExpense._id) {
+                    if (expense._id !== res.data.removeExpense._id) {
                         newExpensesList.push(expense);
                     }
                 });
@@ -104,32 +115,95 @@ const Expenses = () => {
             });
     };
 
-    const [expenses, dispatch] = useReducer(expensesReducer, []);
+    const updateExpense = expense => {
+        setIsLoading(true);
+        expense.date = convertTimeToMs(expense.date);
+        expense.updateDate = convertTimeToMs(expense.updateDate);
 
-    // useEffect(() => {
-    //     const expenses = JSON.parse(localStorage.getItem('expenses'));
+        const requestBody = {
+            query: `
+                      mutation UpdateExpense($id: ID!, $title: String!, $description: String, $price: String!, $group: String!, $createdAt: String!, $updatedAt: String! ) {
+                        updateExpense(expenseId: $id, expenseInput:{title: $title, description: $description, price: $price, group:$group, createdAt:$createdAt, updatedAt: $updatedAt}) {
+                            _id
+                            title
+                            price
+                            createdAt
+                            updatedAt
+                            description
+                            group
+                          }
+                      }
+                    `,
+            variables: {
+                id: expense.id,
+                title: expense.title,
+                description: expense.description,
+                price: expense.price,
+                group: expense.group,
+                createdAt: expense.date,
+                updatedAt: expense.updateDate
+            }
+        };
 
-    //     if (expenses) {
-    //         dispatch({ type: 'POPULATE_EXPENSES', expenses });
-    //     }
-    // }, []);
+        fetch('/graphql', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + currentUser.token
+            }
+        })
+            .then(res => {
+                if (!res.ok) {
+                    setIsLoading(false);
+                    throw (res.statusText);
+                }
+                return res.json();
+            })
+            .then(res => {
+                if (res.errors) {
+                    throw (res.errors[0].message);
+                }
+                let newArray = [];
+                allExpenses.map(expense => {
+                    if (expense._id === res.data.updateExpense._id) {
+                        expense = res.data.updateExpense;
+                        newArray.push(expense);
+                    } else {
+                        newArray.push(expense);
+                    }
+                });
+                setAllExpenses([...newArray]);
+                setIsLoading(false);
+                modalInfo(true, 'Confirmation', 'Expense was updated');
+                console.log(res.data.updateExpense);
+            })
+            .catch(err => {
+                setIsLoading(false);
+                console.log(err);
+                modalInfo(true, 'Error', err);
+                throw err;
+            });
+    };
 
-    // useEffect(() => {
-    //     localStorage.setItem('expenses', JSON.stringify(expenses));
-    // }, [expenses]);
-
+    const convertTimeToMs = time => {
+        return JSON.stringify(moment(time).valueOf());
+    };
 
     return (
-        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense }}>
-            {
-                isLoading ? <Spinner /> :
-                    <Fragment>
-                        <AddExpense />
-                        <div className='center'>
-                            <ExpenseList />
-                        </div>
-                    </Fragment>
-            }
+        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense }}>
+            <ModalContext.Provider value={{ showInfoModal, setShowInfoModal,  modalHeader, modalText}}>
+                {
+                    isLoading ? <Spinner /> :
+                        <Fragment>
+                            <InfoModal />
+                            <AddExpense />
+                            <div className='center'>
+                                <ExpenseList />
+                            </div>
+                        </Fragment>
+                }
+            </ModalContext.Provider>
         </ExpensesContext.Provider>
     );
 };

@@ -120,6 +120,7 @@ type RootMutation {
 
     createExpense(expenseInput: ExpenseInput): Expense
     removeExpense(expenseId: ID!): Expense!
+    updateExpense(expenseId: ID!, expenseInput: ExpenseInput): Expense!
 
     createEvent(eventInput: EventInput): Event
     createUser(userInput: UserInput): User

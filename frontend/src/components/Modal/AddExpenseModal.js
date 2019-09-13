@@ -16,6 +16,10 @@ const formatDate = (pleaseformat) => {
     return moment(pleaseformat).format('MM-DD-YYYY');
 };
 
+const dateBeautify = (milliseconds) => {
+    return moment(milliseconds, 'x').format('MM-DD-YYYY');
+};
+
 const validatePrice = (event) => {
     let price = event.target.value;
     if (price.length === 1 && price === '.') {
@@ -32,7 +36,7 @@ const validatePrice = (event) => {
 };
 
 const AddExpenseModal = () => {
-    const {submitExpense, showModal, setShowModal } = useContext(ModalContext);
+    const {submitExpense, showModal, setShowModal, expense, onUpdate } = useContext(ModalContext);
     const handleClose = () => setShowModal(!showModal);
     let time = moment().format('MM-DD-YYYY');
 
@@ -42,16 +46,17 @@ const AddExpenseModal = () => {
                 aria-labelledby="contained-modal-title-vcenter"
                 centered show={showModal} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add expense</Modal.Title>
+                    {onUpdate ? <Modal.Title>Update expense</Modal.Title> : <Modal.Title>Add expense</Modal.Title>}
                 </Modal.Header>
                 <Modal.Body>
                     <Formik
                         initialValues={{
-                            title: '',
-                            description: '',
-                            group: '',
-                            price: '',
-                            date: time
+                            title: expense ? expense.title : '',
+                            description: expense ? expense.description : '',
+                            group: expense ? expense.group : '',
+                            price: expense ? expense.price : '',
+                            date: expense ? dateBeautify(expense.createdAt) : time,
+                            updateDate: expense ? dateBeautify(expense.createdAt) : time,
                         }}
                         validationSchema={Yup.object().shape({
                             title: Yup.string()
@@ -138,7 +143,7 @@ const AddExpenseModal = () => {
                                     <ErrorMessage name="date" component="div" className="invalid-feedback" />
                                 </div>
                                 <div className="form-actions float-right">
-                                    <button type="submit" className="btn btn-primary mr-2">Submit</button>
+                                    {onUpdate? <button type="submit" className="btn btn-primary mr-2">Update</button> : <button type="submit" className="btn btn-primary mr-2">Submit</button> }
                                     <button className="btn btn-secondary" onClick={handleClose}>Cancel</button>
                                 </div>
                             </Form>
