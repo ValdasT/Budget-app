@@ -56,7 +56,7 @@ const AddExpenseModal = () => {
                             group: expense ? expense.group : '',
                             price: expense ? expense.price : '',
                             date: expense ? dateBeautify(expense.createdAt) : time,
-                            updateDate: expense ? dateBeautify(expense.createdAt) : time,
+                            updateDate: expense ? dateBeautify(expense.updatedAt) : time,
                         }}
                         validationSchema={Yup.object().shape({
                             title: Yup.string()

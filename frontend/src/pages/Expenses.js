@@ -181,7 +181,6 @@ const Expenses = () => {
         setIsLoading(true);
         expense.date = convertTimeToMs(expense.date);
         expense.updateDate = convertTimeToMs(expense.updateDate);
-
         const requestBody = {
             query: `
                       mutation UpdateExpense($id: ID!, $title: String!, $description: String, $price: String!, $group: String!, $createdAt: String!, $updatedAt: String! ) {
