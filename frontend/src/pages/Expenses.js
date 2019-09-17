@@ -4,6 +4,7 @@ import ExpensesContext from '../context/expenses-context';
 import ModalContext from '../context/modal-context';
 import ExpenseList from '../components/Expenses/ExpensesList/ExpensesList';
 import AddExpense from '../components/Expenses/AddExpense/AddExpense';
+import Filter from '../components/Filter/Filter';
 import InfoModal from '../components/Modal/Modal';
 import Spinner from '../components/Spinner/Spinner';
 import './Expenses.css';
@@ -52,7 +53,6 @@ const Expenses = () => {
             }
         })
             .then(res => {
-                console.log(res);
                 if (res.status !== 200 && res.status !== 201) {
                     throw new Error('Failed!');
                 }
@@ -106,6 +106,7 @@ const Expenses = () => {
             })
             .then(resData => {
                 setIsLoading(false);
+                resData.data.expenses = sortByDate(resData.data.expenses);
                 setAllExpenses(resData.data.expenses);
                 console.log(resData.data.expenses);
 
@@ -113,6 +114,57 @@ const Expenses = () => {
             .catch(err => {
                 setIsLoading(false);
                 console.log(err);
+            });
+    };
+
+    const onFilter = (values) => {
+        setIsLoading(true);
+        const requestBody = {
+            query: `
+            query ExpensesFilter($dateFrom: String!, $dateTo: String!){
+                expensesFilter(dateFrom: $dateFrom, dateTo: $dateTo) {
+                    _id
+                    title
+                    description
+                    price
+                    group
+                    createdAt
+                    updatedAt
+                }
+            }`,
+            variables: {
+                dateFrom: convertTimeToMs(values.dateFrom),
+                dateTo: convertTimeToMs(values.dateTo)
+            }
+        };
+        fetch('/graphql', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + currentUser.token
+            }
+        })
+            .then(res => {
+                if (!res.ok) {
+                    setIsLoading(false);
+                    throw (res.statusText);
+                }
+                return res.json();
+            })
+            .then(res => {
+                if (res.errors) {
+                    throw (res.errors[0].message);
+                }
+                setIsLoading(false);
+                res.data.expensesFilter = sortByDate(res.data.expensesFilter);
+                setAllExpenses(res.data.expensesFilter);
+            })
+            .catch(err => {
+                setIsLoading(false);
+                console.log(err);
+                modalInfo(true, 'Error', err);
+                throw err;
             });
     };
 
@@ -234,6 +286,7 @@ const Expenses = () => {
                         newArray.push(expense);
                     }
                 });
+                newArray = sortByDate(newArray);
                 setAllExpenses([...newArray]);
                 setIsLoading(false);
                 modalInfo(true, 'Confirmation', 'Expense was updated');
@@ -251,14 +304,24 @@ const Expenses = () => {
         return JSON.stringify(moment(time).valueOf());
     };
 
+    const sortByDate = arrayWithDate => {
+        arrayWithDate.sort(function (a, b) {
+            a = moment(a.createdAt, 'x').format('DD-MM-YYYY').split('-').reverse().join('');
+            b = moment(b.createdAt, 'x').format('DD-MM-YYYY').split('-').reverse().join('');
+            return a.localeCompare(b);
+        });
+        return arrayWithDate;
+    };
+
     return (
-        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading }}>
-            <ModalContext.Provider value={{ showInfoModal, setShowInfoModal,  modalHeader, modalText, showModal, submitExpense, setShowModal, modalInfo}}>
+        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading, onFilter }}>
+            <ModalContext.Provider value={{ showInfoModal, setShowInfoModal, modalHeader, modalText, showModal, submitExpense, setShowModal, modalInfo }}>
+                <Filter />
+                <AddExpense />
                 {
                     isLoading ? <Spinner /> :
                         <Fragment>
                             <InfoModal />
-                            <AddExpense />
                             <div className='center'>
                                 <ExpenseList />
                             </div>

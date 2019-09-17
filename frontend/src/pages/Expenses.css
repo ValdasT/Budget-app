@@ -9,17 +9,6 @@
   max-width: 80%;
 }
 
-.btn_addExpense {
-  background-color: #aeaeae;
-  color: #ffffff !important;
-  transition: all 0.4s ease 0s;
-}
-
-.btn_addExpense:hover {
-  background-color: #9b9b9b;
-  transition: all 0.4s ease 0s;
-}
-
 .center {
   margin: 0 auto;
   width: 95%;

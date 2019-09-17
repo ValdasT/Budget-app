@@ -144,7 +144,7 @@ const AddExpenseModal = () => {
                                 </div>
                                 <div className="form-actions float-right">
                                     {onUpdate? <button type="submit" className="btn btn-primary mr-2">Update</button> : <button type="submit" className="btn btn-primary mr-2">Submit</button> }
-                                    <button className="btn btn-secondary" onClick={handleClose}>Cancel</button>
+                                    <button  type='button' className="btn btn-secondary" onClick={handleClose}>Cancel</button>
                                 </div>
                             </Form>
                         )}

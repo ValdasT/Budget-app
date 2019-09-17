@@ -32,6 +32,23 @@ module.exports = {
         }
     },
 
+    expensesFilter: async (args, req) => {
+        if (!req.isAuth) {
+            throw new Error('Unauthenticated!');
+        }
+        try {
+            const expenses = await Expense.find({
+                creator: req.userId,
+                createdAt: {$gte: args.dateFrom, $lte:args.dateTo}
+            });
+            return expenses.map(expense => {
+                return transformExpense(expense);
+            });
+        } catch (err) {
+            throw err;
+        }
+    },
+
     createExpense: async (args, req) => {
         if (!req.isAuth) {
             throw new Error('Unauthenticated!');

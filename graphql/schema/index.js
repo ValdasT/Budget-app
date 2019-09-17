@@ -109,6 +109,7 @@ type RootQuery {
     allFiles: [File!]!
     events: [Event!]!
     expenses: [Expense!]!
+    expensesFilter (dateFrom: String!, dateTo: String!): [Expense!]!
     bookings: [Booking!]!
     login(email: String!, password: String!): AuthData!
 }

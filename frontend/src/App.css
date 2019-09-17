@@ -4,3 +4,34 @@
 .main-content {
   margin: 4rem 2.5rem;
 }
+
+.btn_main {
+  background-color: #aeaeae;
+  color: #ffffff !important;
+  transition: all 0.4s ease 0s;
+}
+
+.btn_main:hover {
+  background-color: #ea97c4;
+  transition: all 0.4s ease 0s;
+}
+
+.btn_with_line {
+  cursor: pointer;
+  color: #494949;
+  background: #ffffff;
+  padding-bottom: 0px;
+  border: 0px;
+  border-bottom: 1px solid #494949 !important;
+  border-radius: 0px;
+  display: inline-block;
+  transition: all 0.4s ease 0s;
+  }
+
+  .btn_with_line:hover {
+    /* transform: scale(1.05, 1.05); */
+    cursor: pointer;
+    color: #ea97c4;
+    border-bottom-color: #ea97c4 !important;
+    transition: all 0.4s ease 0s;
+    }
