@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import moment from 'moment';
 import ExpensesContext from '../../../../context/expenses-context';
 import ModalContext from '../../../../context/modal-context';
@@ -21,7 +21,7 @@ const Expense = ({ expense }) => {
         setDocId(id);
     };
 
-    const { removeExpense, updateExpense } = useContext(ExpensesContext);
+    const { removeExpense, updateExpense, showMore } = useContext(ExpensesContext);
 
     const dateBeautify = (milliseconds) => {
         return moment(milliseconds, 'x').format('MM-DD-YYYY');
@@ -37,18 +37,18 @@ const Expense = ({ expense }) => {
     };
 
     return (
-        <ModalContext.Provider value={{ modalText, showInfoModal, setShowInfoModal, actionFunction, showModal, setShowModal, expense, onUpdate, submitExpense}}>
+        <ModalContext.Provider value={{ modalText, showInfoModal, setShowInfoModal, actionFunction, showModal, setShowModal, expense, onUpdate, submitExpense }}>
             <ConfirmationModal />
             <AddExpenseModal />
-            <span className="card">
+            <span className={!showMore ? 'card' : 'card_more'}>
                 <div style={{ background: 'rgb(249, 248, 248)' }}>
-                    <div className='card_title'> {expense.title}</div>
+                    <div className={!showMore ? 'card_title' : 'card_title_more'}> {expense.title}</div>
                 </div>
-                <div className='card_date'>{dateBeautify(expense.createdAt)}</div>
-                <div className='card_group'>Group: {expense.group}</div>
-                <div className='card_description'>{expense.description}</div>
+                <div className={'card_date'}>{dateBeautify(expense.createdAt)}</div>
+                <div className={!showMore ? 'card_group invisible' : 'card_group'}>Group: {expense.group}</div>
+                <div className={!showMore ? 'card_description invisible' : 'card_description'}>{expense.description}</div>
                 <div className='card_price'>-{expense.price} € </div>
-                <button className='btn card_removeButton' onClick={() => modalInfo(true,'Are you sure whant to delete this item?', expense._id)}>
+                <button className='btn card_removeButton' onClick={() => modalInfo(true, 'Are you sure whant to delete this item?', expense._id)}>
                     <i><FaRegTimesCircle size={20} /></i>
                 </button>
                 <button className='btn card_editButton' onClick={() => setShowModal(!showModal)}>

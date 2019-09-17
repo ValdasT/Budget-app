@@ -3,7 +3,6 @@ import moment from 'moment';
 import ExpensesContext from '../context/expenses-context';
 import ModalContext from '../context/modal-context';
 import ExpenseList from '../components/Expenses/ExpensesList/ExpensesList';
-import AddExpense from '../components/Expenses/AddExpense/AddExpense';
 import Filter from '../components/Filter/Filter';
 import InfoModal from '../components/Modal/Modal';
 import Spinner from '../components/Spinner/Spinner';
@@ -19,6 +18,7 @@ const Expenses = () => {
     let [modalHeader, setModalHeader] = useState('');
     let [modalText, setModalText] = useState();
     let [showInfoModal, setShowInfoModal] = useState(false);
+    let [showMore, setShowMore] = useState(false);
 
     const modalInfo = (show, header, text) => {
         setShowInfoModal(show);
@@ -314,10 +314,9 @@ const Expenses = () => {
     };
 
     return (
-        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading, onFilter }}>
+        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading, onFilter, showMore, setShowMore}}>
             <ModalContext.Provider value={{ showInfoModal, setShowInfoModal, modalHeader, modalText, showModal, submitExpense, setShowModal, modalInfo }}>
                 <Filter />
-                <AddExpense />
                 {
                     isLoading ? <Spinner /> :
                         <Fragment>
