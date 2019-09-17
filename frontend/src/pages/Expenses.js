@@ -314,7 +314,7 @@ const Expenses = () => {
     };
 
     return (
-        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading, onFilter, showMore, setShowMore}}>
+        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading, onFilter, getExpenseList, showMore, setShowMore}}>
             <ModalContext.Provider value={{ showInfoModal, setShowInfoModal, modalHeader, modalText, showModal, submitExpense, setShowModal, modalInfo }}>
                 <Filter />
                 {

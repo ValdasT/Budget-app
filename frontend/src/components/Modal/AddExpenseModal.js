@@ -1,4 +1,4 @@
-import React, { useContext, Fragment } from 'react';
+import React, { useContext, Fragment, useState } from 'react';
 import ModalContext from '../../context/modal-context';
 import { Modal } from 'react-bootstrap';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
@@ -13,11 +13,11 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './Modal.css';
 
 const formatDate = (pleaseformat) => {
-    return moment(pleaseformat).format('MM-DD-YYYY');
+    return moment(pleaseformat).format('MM/DD/YYYY');
 };
 
 const dateBeautify = (milliseconds) => {
-    return moment(milliseconds, 'x').format('MM-DD-YYYY');
+    return moment(milliseconds, 'x').format('MM/DD/YYYY');
 };
 
 const validatePrice = (event) => {
@@ -38,7 +38,8 @@ const validatePrice = (event) => {
 const AddExpenseModal = () => {
     const {submitExpense, showModal, setShowModal, expense, onUpdate } = useContext(ModalContext);
     const handleClose = () => setShowModal(!showModal);
-    let time = moment().format('MM-DD-YYYY');
+    let time = moment().format('MM/DD/YYYY');
+    const [selectedDate, setSelectedDate] = useState(new Date(expense ? dateBeautify(expense.createdAt) : time));
 
     return (
         <Fragment>
@@ -133,8 +134,9 @@ const AddExpenseModal = () => {
                                                 type="text"
                                                 autoComplete="off"
                                                 name="date"
+                                                selected={selectedDate}
                                                 placeholder="Enter date"
-                                                onChange={e => { setFieldValue('date', formatDate(e)); }} />
+                                                onChange={e => { setFieldValue('date', formatDate(e)); setSelectedDate(e); }} />
                                             <div className="input-group-append">
                                                 <div className="input-group-text"><FaRegCalendarAlt className="" size={20} /></div>
                                             </div>

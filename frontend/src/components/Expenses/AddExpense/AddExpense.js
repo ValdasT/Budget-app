@@ -1,4 +1,4 @@
-import React, { useContext, Fragment, useState } from 'react';
+import React, { useContext, Fragment} from 'react';
 import ModalContext from '../../../context/modal-context';
 import ExpensesContext from '../../../context/expenses-context';
 import AddExpenseModal from '../../Modal/AddExpenseModal';

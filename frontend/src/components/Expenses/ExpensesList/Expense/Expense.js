@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import moment from 'moment';
 import ExpensesContext from '../../../../context/expenses-context';
 import ModalContext from '../../../../context/modal-context';
@@ -24,7 +24,7 @@ const Expense = ({ expense }) => {
     const { removeExpense, updateExpense, showMore } = useContext(ExpensesContext);
 
     const dateBeautify = (milliseconds) => {
-        return moment(milliseconds, 'x').format('MM-DD-YYYY');
+        return moment(milliseconds, 'x').format('MM/DD/YYYY');
     };
 
     const actionFunction = () => {

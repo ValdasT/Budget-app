@@ -62,7 +62,6 @@ const AuthPage = () => {
                 login(email: $email, password: $password) {
                   userId
                   token
-                  tokenExpiration
                 }
               }
             `,
@@ -111,7 +110,6 @@ const AuthPage = () => {
                     login(
                         res.data.login.token,
                         res.data.login.userId,
-                        res.data.login.tokenExpiration,
 
                     );
                 } else {
