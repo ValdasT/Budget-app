@@ -9,7 +9,7 @@ import '../ExpensesList/Expense/Expense.css';
 
 const AddExpenseForm = () => {
     const { showModal, setShowModal } = useContext(ModalContext);
-    const { setShowMore,showMore } = useContext(ExpensesContext);
+    const { setShowMore, showMore, allExpenses } = useContext(ExpensesContext);
 
     return (
         <ExpensesContext.Provider value={{ showMore }}>
@@ -20,9 +20,9 @@ const AddExpenseForm = () => {
                         <button className='btn_one' onClick={() => setShowModal(!showModal)}>
                             <i><FiPlus size={40} /></i>
                         </button>
-                        <button className='btn_one' onClick={() => setShowMore(!showMore)}>
+                        {allExpenses.length? <button className='btn_one' onClick={() => setShowMore(!showMore)}>
                             {!showMore ? <i><MdUnfoldMore size={40} /></i> : <i><MdUnfoldLess size={40} /></i>}
-                        </button>
+                        </button> : null}
                     </div>
                     {showModal && (
                         <Fragment>

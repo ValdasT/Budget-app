@@ -74,7 +74,7 @@
     color: #686868;
   }
 
-  .card_price {
+  .card_price_expense {
     position: absolute;
     bottom:0;
     left:0;
@@ -82,7 +82,16 @@
     padding: 5px;
     margin-left: 5px;
     display: inline-block;
-    /* transition: all 0.4s ease 0s; */
+    }
+
+  .card_price_income {
+    position: absolute;
+    bottom:0;
+    left:0;
+    color: #1d8c07 !important;
+    padding: 5px;
+    margin-left: 5px;
+    display: inline-block;
     }
 
   .card_editButton {

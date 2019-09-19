@@ -52,6 +52,7 @@ const AddExpenseModal = () => {
                 <Modal.Body>
                     <Formik
                         initialValues={{
+                            tag: expense ? expense.tag : '',
                             title: expense ? expense.title : '',
                             description: expense ? expense.description : '',
                             group: expense ? expense.group : '',
@@ -65,6 +66,8 @@ const AddExpenseModal = () => {
                             description: Yup.string(),
                             group: Yup.string()
                                 .required('Group is required'),
+                            tag: Yup.string()
+                                .required('Type is required'),
                             price: Yup.number()
                                 .required('Price is required'),
                             date: Yup.date()
@@ -77,6 +80,18 @@ const AddExpenseModal = () => {
                         render={({ errors, values, touched, handleChange, setFieldValue, handleBlur, }) => (
                             <Form className="auth-form">
                                 <div className="p-2">
+                                </div>
+                                <div className="form-group row">
+                                    <label className="col-sm-3 col-form-label" htmlFor="title">Type</label>
+                                    <div className="col-sm-9">
+                                        <select name="tag" onChange={handleChange}
+                                            onBlur={handleBlur} value={values.tag} className={'custom-select mr-sm-2 form-control' + (errors.tag && touched.tag ? ' is-invalid' : '')} id="inlineFormCustomSelect">
+                                            <option value="">Select a type</option>
+                                            <option value="Expense">Expense</option>
+                                            <option value="Income">Income</option>
+                                        </select>
+                                        <ErrorMessage name="tag" component="div" className="invalid-feedback" />
+                                    </div>
                                 </div>
                                 <div className="form-group row">
                                     <label className="col-sm-3 col-form-label" htmlFor="title">Title</label>

@@ -34,6 +34,7 @@ type Income {
   title: String!
   description: String!
   price: String!
+  group: String!
   createdAt: String!
   updatedAt: String!
   creator: User!
@@ -104,13 +105,26 @@ input ExpenseInput {
   updatedAt: String!
 }
 
+input IncomeInput {
+  title: String!
+  description: String
+  price: String!
+  group: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
 type RootQuery {
     allFiles: [File!]!
     events: [Event!]!
-    expenses: [Expense!]!
-    expensesFilter (dateFrom: String!, dateTo: String!): [Expense!]!
     bookings: [Booking!]!
     login(email: String!, password: String!): AuthData!
+
+    expenses: [Expense!]!
+    expensesFilter (dateFrom: String!, dateTo: String!): [Expense!]!
+
+    incomes: [Income!]!
+    incomesFilter (dateFrom: String!, dateTo: String!): [Income!]!
 }
 
 type RootMutation {
@@ -121,6 +135,10 @@ type RootMutation {
     createExpense(expenseInput: ExpenseInput): Expense
     removeExpense(expenseId: ID!): Expense!
     updateExpense(expenseId: ID!, expenseInput: ExpenseInput): Expense!
+
+    createIncome(incomeInput: IncomeInput): Income
+    removeIncome(incomeId: ID!): Income!
+    updateIncome(incomeId: ID!, incomeInput: IncomeInput): Income!
 
     createEvent(eventInput: EventInput): Event
     createUser(userInput: UserInput): User

@@ -67,6 +67,14 @@ const transformExpense = expense => {
   }
 }
 
+const transformIncome = income => {
+  return {
+    ...income._doc,
+    _id: income.id,
+    creator: user.bind(this, income.creator)
+  }
+}
+
 const transformBooking = booking => {
   return {
     ...booking._doc,
@@ -80,6 +88,7 @@ const transformBooking = booking => {
 
 exports.transformEvent = transformEvent;
 exports.transformExpense = transformExpense;
+exports.transformIncome = transformIncome;
 exports.transformBooking = transformBooking;
 
 // exports.user = user;

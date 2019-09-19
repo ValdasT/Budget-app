@@ -10,7 +10,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 
 const Filter = () => {
-    const { onFilter, getExpenseList } = useContext(ExpensesContext);
+    const { getAllOnFilter, getAll } = useContext(ExpensesContext);
     let toTime = moment().format('MM/DD/YYYY');
     let fromTime = moment().subtract(1, 'months').format('MM/DD/YYYY');
     const [startDate, setStartDate] = useState(new Date(fromTime));
@@ -31,49 +31,49 @@ const Filter = () => {
                 dateFrom: moment().format('MM/DD/YYYY'),
                 dateTo: moment().format('MM/DD/YYYY')
             };
-            onFilter(date);
+            getAllOnFilter(date);
             break;
         case 'week':
             date = {
                 dateFrom: moment().startOf('week').format('MM/DD/YYYY'),
                 dateTo: moment().endOf('week').format('MM/DD/YYYY')
             };
-            onFilter(date);
+            getAllOnFilter(date);
             break;
         case 'month':
             date = {
                 dateFrom: moment().startOf('month').format('MM/DD/YYYY'),
                 dateTo: moment().endOf('month').format('MM/DD/YYYY')
             };
-            onFilter(date);
+            getAllOnFilter(date);
             break;
         case 'year':
             date = {
                 dateFrom: moment().startOf('year').format('MM/DD/YYYY'),
                 dateTo: moment().endOf('year').format('MM/DD/YYYY')
             };
-            onFilter(date);
+            getAllOnFilter(date);
             break;
         case 'all':
-            getExpenseList();
+            getAll();
             break;
         default:
             date = {
                 dateFrom: moment().startOf('month').format('MM/DD/YYYY'),
                 dateTo: moment().endOf('month').format('MM/DD/YYYY')
             };
-            onFilter(date);
+            getAllOnFilter(date);
         }
     };
 
     return (
         <Fragment>
             <div className="form-group row col-sm-12  justify-content-center mb-3">
-                <button className=" col-sm-1 btn btn_with_line" onClick={() => fastFilter('today')}>Today</button>
-                <button className="col-sm-1 btn btn_with_line" onClick={() => fastFilter('week')}>This week</button>
-                <button className="col-sm-1 btn btn_with_line" onClick={() => fastFilter('month')}>This month</button>
-                <button className="col-sm-1 btn btn_with_line" onClick={() => fastFilter('year')}>This year</button>
-                <button className="col-sm-1 btn btn_with_line" onClick={() => fastFilter('all')}>All</button>
+                <button className=" col-sm-2 btn btn_with_line" onClick={() => fastFilter('today')}>Today</button>
+                <button className="col-sm-2 btn btn_with_line" onClick={() => fastFilter('week')}>This week</button>
+                <button className="col-sm-2 btn btn_with_line" onClick={() => fastFilter('month')}>This month</button>
+                <button className="col-sm-2 btn btn_with_line" onClick={() => fastFilter('year')}>This year</button>
+                <button className="col-sm-2 btn btn_with_line" onClick={() => fastFilter('all')}>All</button>
             </div>
             <Formik
                 initialValues={{
@@ -87,7 +87,7 @@ const Filter = () => {
                         .required('Date is required')
                 })}
                 onSubmit={fields => {
-                    onFilter(fields);
+                    getAllOnFilter(fields);
                 }}
 
                 render={({ errors, values, touched, setFieldValue }) => (
