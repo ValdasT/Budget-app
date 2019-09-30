@@ -4,7 +4,9 @@ import ExpensesContext from '../context/expenses-context';
 import ModalContext from '../context/modal-context';
 import ExpenseList from '../components/Expenses/ExpensesList/ExpensesList';
 import Filter from '../components/Filter/Filter';
+import SmallStatistics from '../components/SmallStatistics/SmallStatistics';
 import InfoModal from '../components/Modal/Modal';
+import ImportModal from '../components/Modal/ImportFileModal';
 import Spinner from '../components/Spinner/Spinner';
 import './Expenses.css';
 
@@ -14,10 +16,11 @@ const Expenses = () => {
     let currentUser = AuthContext._currentValue;
     let [isLoading, setIsLoading] = useState(false);
     let [showModal, setShowModal] = useState(false);
+    let [showInfoModal, setShowInfoModal] = useState(false);
+    let [showImportModal, setShowIportModal] = useState(false);
     let [allExpenses, setAllExpenses] = useState([]);
     let [modalHeader, setModalHeader] = useState('');
     let [modalText, setModalText] = useState();
-    let [showInfoModal, setShowInfoModal] = useState(false);
     let [showMore, setShowMore] = useState(false);
 
     const modalInfo = (show, header, text) => {
@@ -544,12 +547,14 @@ const Expenses = () => {
 
     return (
         <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading, getAllOnFilter, getAll, showMore, setShowMore}}>
-            <ModalContext.Provider value={{ showInfoModal, setShowInfoModal, modalHeader, modalText, showModal, submitExpense, setShowModal, modalInfo }}>
+            <ModalContext.Provider value={{ showInfoModal, setShowInfoModal, modalHeader, modalText, showModal, submitExpense, setShowModal, modalInfo, showImportModal, setShowIportModal}}>
                 <Filter />
+                <SmallStatistics />
                 {
                     isLoading ? <Spinner /> :
                         <Fragment>
                             <InfoModal />
+                            <ImportModal/>
                             <div className='center'>
                                 <ExpenseList />
                             </div>
