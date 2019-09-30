@@ -80,7 +80,7 @@ const InfoModal = () => {
         maxSize,
     });
 
-    const isFileTooLarge = rejectedFiles.length > 0 && rejectedFiles[0].size > maxSize ;
+    const isFileTooLarge = rejectedFiles.length > 0 && rejectedFiles[0].size > maxSize;
 
     return (
         <Fragment>
