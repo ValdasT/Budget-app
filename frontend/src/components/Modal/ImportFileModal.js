@@ -1,8 +1,10 @@
 import React, { useContext, useState, useCallback, Fragment } from 'react';
 import ModalContext from '../../context/modal-context';
+import ExpensesContext from '../../context/expenses-context';
 import Spinner from '../Spinner/Spinner';
 import { useDropzone } from 'react-dropzone';
 import Papa from 'papaparse';
+import XLSX from 'xlsx';
 import { FiUpload } from "react-icons/fi";
 import { Modal, Button } from 'react-bootstrap';
 import { FiDelete } from "react-icons/fi";
@@ -11,6 +13,7 @@ import './Modal.css';
 
 const InfoModal = () => {
     const { modalInfo, showImportModal, setShowIportModal } = useContext(ModalContext);
+    const { submitExpenseFromImport, setAllExpenses } = useContext(ExpensesContext);
     let [allFiles, setAllFiles] = useState([]);
     let [uploadingFiles, setUploadingFiles] = useState(false);
     let [showWarning, setShowWarning] = useState(false);
@@ -29,26 +32,64 @@ const InfoModal = () => {
             setShowWarning(true);
         } else {
             setUploadingFiles(true);
-            files.forEach((file, i) => {
-                Papa.parse(file, {
-                    complete: function (results) {
-                        console.log(results);
-                        if (files.length == i + 1) {
-                            modalInfo(true, 'Confirmation', 'File was uploaded');
-                            setUploadingFiles(false);
-                            setAllFiles([]);
-                            handleClose();
-                        }
-                    }
-                });
-            });
+            let extension = files[0].name.split('.');
+            extension = extension[extension.length - 1].toLowerCase();
+            if (extension === 'csv') {
+                csvToJson(files[0]);
+            } else {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    let bstr = e.target.result;
+                    let wb = XLSX.read(bstr, { type: 'binary', header: 1, cellDates: true, dateNF: 'DD/MM/YYYY' });
+                    let wsname = wb.SheetNames[0];
+                    let ws = wb.Sheets[wsname];
+                    let csv = XLSX.utils.sheet_to_csv(ws, { header: 1, raw: false });
+                    csvToJson(csv);
+                };
+                let binaryFile = reader.readAsBinaryString(files[0]);
+            }
         }
+    };
+
+    const csvToJson = csv => {
+        Papa.parse(csv, {
+            complete: function (results) {
+                createNewCards(results);
+            }
+        });
+    };
+
+    const createNewCards = async fromFile => {
+        let formatedArray = [];
+        fromFile.data.forEach((element, i) => {
+            if (i !== 0 && element[0].length) {
+                formatedArray.push({
+                    title: element[0],
+                    description: element[1],
+                    price: element[2],
+                    group: element[3],
+                    createdAt: element[4],
+                    tag: element[5]
+                });
+            }
+        });
+        let newFromDb = [];
+        formatedArray.forEach(async e => {
+            newFromDb.push(await submitExpenseFromImport(e));
+            if (formatedArray.length === newFromDb.length) {
+                await setAllExpenses(newFromDb);
+                modalInfo(true, 'Confirmation', 'File was uploaded');
+                setUploadingFiles(false);
+                setAllFiles([]);
+                handleClose();
+            }
+        });
     };
 
     const removeFile = file => {
         let newFileList = [];
         allFiles.map(e => {
-            if (e.name != file.name && e.size != file.size) {
+            if (e.name !== file.name && e.size !== file.size) {
                 newFileList.push(e);
             }
         });
@@ -112,7 +153,7 @@ const InfoModal = () => {
                                             ))
                                         }
                                     </ul>
-                                    <div className="drop_zone container text-center mt-5" {...getRootProps()}>
+                                    <div className="drop_zone container text-center " {...getRootProps()}>
                                         <input {...getInputProps()} />
                                         {!isDragActive && <i>Click here or drop a file to upload! <FiUpload size={20} /></i>}
                                         {isDragActive && !isDragReject && "Drop it here!"}

@@ -385,8 +385,95 @@ const Expenses = () => {
             });
     };
 
+    const submitExpenseFromImport = fields => {
+        let requestBody = {
+            query: ''
+        };
+        let time = convertTimeToMs(fields.createdAt);
+        if (fields.tag === 'Expense') {
+            requestBody = {
+                query: `
+                          mutation CreateExpense($title: String!, $description: String, $price: String!, $group: String!, $createdAt: String!, $updatedAt: String! ) {
+                            createExpense(expenseInput:{title: $title, description: $description, price: $price, group:$group, createdAt:$createdAt, updatedAt: $updatedAt}) {
+                                _id
+                                title
+                                price
+                                createdAt
+                                updatedAt
+                                description
+                                group
+                              }
+                          }
+                        `,
+                variables: {
+                    title: fields.title,
+                    description: fields.description,
+                    price: fields.price,
+                    group: fields.group,
+                    createdAt: time,
+                    updatedAt: time
+                }
+            };
+        } else {
+            requestBody = {
+                query: `
+                          mutation CreateIncome($title: String!, $description: String, $price: String!, $group: String!, $createdAt: String!, $updatedAt: String! ) {
+                            createIncome(incomeInput:{title: $title, description: $description, price: $price, group:$group, createdAt:$createdAt, updatedAt: $updatedAt}) {
+                                _id
+                                title
+                                price
+                                createdAt
+                                updatedAt
+                                description
+                                group
+                              }
+                          }
+                        `,
+                variables: {
+                    title: fields.title,
+                    description: fields.description,
+                    price: fields.price,
+                    group: fields.group,
+                    createdAt: time,
+                    updatedAt: time
+                }
+            };
+        }
+
+        return fetch('/graphql', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + currentUser.token
+            }
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw (res.statusText);
+                }
+                return res.json();
+            })
+            .then(res => {
+                if (res.errors) {
+                    throw (res.errors[0].message);
+                }
+                if (res.data.createExpense) {
+                    res.data.createExpense.tag = 'Expense';
+                    return res.data.createExpense;
+                } else {
+                    res.data.createIncome.tag = 'Income';
+                    return res.data.createIncome;
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                modalInfo(true, 'Error', err);
+                throw err;
+            });
+    };
+
     const updateExpense = expense => {
-        console.log(expense);
         setIsLoading(true);
         let requestBody = {
             query: ''
@@ -546,7 +633,7 @@ const Expenses = () => {
     };
 
     return (
-        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading, getAllOnFilter, getAll, showMore, setShowMore}}>
+        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading, getAllOnFilter, getAll, showMore, setShowMore, submitExpenseFromImport}}>
             <ModalContext.Provider value={{ showInfoModal, setShowInfoModal, modalHeader, modalText, showModal, submitExpense, setShowModal, modalInfo, showImportModal, setShowIportModal}}>
                 <Filter />
                 <SmallStatistics />

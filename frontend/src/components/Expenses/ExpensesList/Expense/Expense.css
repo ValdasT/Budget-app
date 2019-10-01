@@ -95,6 +95,7 @@
     }
 
   .card_editButton {
+    outline: none !important;
     position: absolute;
     bottom:0;
     right:30px;
@@ -105,11 +106,13 @@
     }
 
     .card_editButton:hover {
+      outline: none !important;
       color: #1d8c07 !important;
       transition: all 0.4s ease 0s;
       }
 
   .card_removeButton {
+    outline: none !important;
     position: absolute;
     bottom:0;
     right:0;
@@ -120,6 +123,7 @@
     }
 
     .card_removeButton:hover {
+      outline: none !important;
       color: #a90f0f !important;
       transition: all 0.4s ease 0s;
       }
@@ -148,7 +152,7 @@
   margin: 3px;
   background: #f9f8f8;
   overflow: hidden;
-  outline: none;
+  outline: none !important;
   cursor: pointer;
   width: 50px;
   height: 50px;
@@ -165,7 +169,7 @@
   margin: 3px;
   background: #f9f8f8;
   overflow: hidden;
-  outline: none;
+  outline: none !important;
   cursor: pointer;
   width: 50px;
   height: 50px;
@@ -179,6 +183,7 @@
 }
 
 .btn_one:hover {
+  outline: none !important;
   color: #ea97c4;
   transform: rotate(360deg);
   -ms-transform: rotate(360deg);
@@ -188,6 +193,7 @@
 }
 
 .btn_upload:hover {
+  outline: none !important;
   color: #ea97c4;
   transform: scale(1.1);
   -ms-transform: scale(1.1);

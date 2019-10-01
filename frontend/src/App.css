@@ -6,17 +6,24 @@
 }
 
 .btn_main {
+  outline: none !important;
   background-color: #aeaeae;
   color: #ffffff !important;
   transition: all 0.4s ease 0s;
 }
 
 .btn_main:hover {
+  outline: none !important;
   background-color: #ea97c4;
   transition: all 0.4s ease 0s;
 }
 
+.btn {
+  outline: none !important;
+}
+
 .btn_with_line {
+  outline: none !important;
   cursor: pointer;
   color: #494949;
   background: #ffffff;
@@ -29,6 +36,7 @@
   }
 
   .btn_with_line:hover {
+    outline: none !important;
     /* transform: scale(1.05, 1.05); */
     cursor: pointer;
     color: #ea97c4;
