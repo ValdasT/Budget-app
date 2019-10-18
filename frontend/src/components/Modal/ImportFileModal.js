@@ -46,7 +46,7 @@ const InfoModal = () => {
                     let csv = XLSX.utils.sheet_to_csv(ws, { header: 1, raw: false });
                     csvToJson(csv);
                 };
-                let binaryFile = reader.readAsBinaryString(files[0]);
+                let binaryFile = reader.readAsBinaryString(files[0]); // it triger reader, don't delete
             }
         }
     };
@@ -60,21 +60,50 @@ const InfoModal = () => {
     };
 
     const createNewCards = async fromFile => {
-        let formatedArray = [];
+        let formatedArray = [{
+            title: '',
+            description: '',
+            price: '',
+            group: '',
+            createdAt: '',
+            tag: ''
+        }];
+        let preparedToDb = [];
+        let fields = await searchFields(fromFile.data[0]);
+        fields.forEach((fromFile, j) => {
+            if (fromFile.name.toLowerCase() === 'title') {
+                formatedArray[0].title = fields[j].id;
+            }
+            if (fromFile.name.toLowerCase() === 'description') {
+                formatedArray[0].description = fields[j].id;
+            }
+            if (fromFile.name.toLowerCase() === 'price') {
+                formatedArray[0].price = fields[j].id;
+            }
+            if (fromFile.name.toLowerCase() === 'group') {
+                formatedArray[0].group = fields[j].id;
+            }
+            if (fromFile.name.toLowerCase() === 'date') {
+                formatedArray[0].createdAt = fields[j].id;
+            }
+            if (fromFile.name.toLowerCase() === 'type') {
+                formatedArray[0].tag = fields[j].id;
+            }
+        });
         fromFile.data.forEach((element, i) => {
             if (i !== 0 && element[0].length) {
-                formatedArray.push({
-                    title: element[0],
-                    description: element[1],
-                    price: element[2],
-                    group: element[3],
-                    createdAt: element[4],
-                    tag: element[5]
+                preparedToDb.push({
+                    title: element[formatedArray[0].title],
+                    description: element[formatedArray[0].description],
+                    price: element[formatedArray[0].price],
+                    group: element[formatedArray[0].group],
+                    createdAt: element[formatedArray[0].createdAt],
+                    tag: element[formatedArray[0].tag]
                 });
             }
         });
         let newFromDb = [];
-        formatedArray.forEach(async e => {
+        preparedToDb.forEach(async e => {
             newFromDb.push(await submitExpenseFromImport(e));
             if (formatedArray.length === newFromDb.length) {
                 await setAllExpenses(newFromDb);
@@ -82,6 +111,45 @@ const InfoModal = () => {
                 setUploadingFiles(false);
                 setAllFiles([]);
                 handleClose();
+            }
+        });
+    };
+
+    const searchFields = fieldsArray => {
+        return new Promise((res, rej) => {
+            let mandataryFields = ['Title', 'Price', 'Group', 'Date', 'Type', 'Description'];
+            let numbers = [];
+            let missingFields = [];
+            mandataryFields.forEach(name => {
+                let found = false;
+                fieldsArray.forEach((field, i) => {
+                    if (name.toLocaleLowerCase() === field.toLowerCase()) {
+                        found = true;
+                        numbers.push({
+                            name: name,
+                            id: i
+                        });
+                    }
+                });
+                if (!found) {
+                    missingFields.push(name);
+                }
+            });
+            if (missingFields.length) {
+                let createErrMsg = '';
+                missingFields.forEach((field, i) => {
+                    if (missingFields.length === i + 1) {
+                        createErrMsg += ` "${field}".`;
+                    } else {
+                        createErrMsg += ` "${field}";`;
+                    }
+                });
+                modalInfo(true, 'Error', `Inappropriate file. Missing fields in the file:${createErrMsg}`);
+                setUploadingFiles(false);
+                setAllFiles([]);
+                handleClose();
+            } else {
+                res(numbers);
             }
         });
     };
@@ -116,7 +184,8 @@ const InfoModal = () => {
 
     const { isDragActive, getRootProps, getInputProps, isDragReject, acceptedFiles, rejectedFiles } = useDropzone({
         onDrop,
-        accept: 'text/csv,application/pdf,text/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        // accept: 'text/csv,application/pdf,text/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        accept: 'text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         minSize: 0,
         maxSize,
     });
