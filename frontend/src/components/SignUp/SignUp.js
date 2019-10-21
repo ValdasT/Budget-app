@@ -44,7 +44,7 @@ const SignUp = () => {
                     <div className="form-group row">
                         <label className="col-sm-4 col-form-label" htmlFor="firstName">First Name</label>
                         <div className="col-sm-8 col-form-label">
-                            <Field placeholder="Firs name" name="firstName" type="text" className={'form-control' + (errors.firstName && touched.firstName ? ' is-invalid' : '')} />
+                            <Field placeholder="First name" name="firstName" type="text" className={'form-control' + (errors.firstName && touched.firstName ? ' is-invalid' : '')} />
                             <ErrorMessage name="firstName" component="div" className="invalid-feedback" />
                         </div>
                     </div>

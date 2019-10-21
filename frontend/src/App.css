@@ -18,8 +18,14 @@
   transition: all 0.4s ease 0s;
 }
 
-.btn {
+.btn_main.btn:active {
   outline: none !important;
+  border: none !important;
+}
+
+.btn_main.btn:focus {
+  outline: none !important;
+  border: none !important;
 }
 
 .btn_with_line {

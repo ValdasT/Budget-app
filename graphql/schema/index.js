@@ -125,26 +125,29 @@ type RootQuery {
 
     incomes: [Income!]!
     incomesFilter (dateFrom: String!, dateTo: String!): [Income!]!
+
+    userData: [User!]!
 }
 
 type RootMutation {
-    createFile(fileInput: FileInput): File
-    deleteFile(fileId: ID!): File
-    updateFile(fileId: ID!): File
+    createFile (fileInput: FileInput): File
+    deleteFile (fileId: ID!): File
+    updateFile (fileId: ID!): File
 
-    createExpense(expenseInput: ExpenseInput): Expense
-    removeExpense(expenseId: ID!): Expense!
-    updateExpense(expenseId: ID!, expenseInput: ExpenseInput): Expense!
+    createExpense (expenseInput: ExpenseInput): Expense
+    removeExpense (expenseId: ID!): Expense!
+    updateExpense (expenseId: ID!, expenseInput: ExpenseInput): Expense!
 
-    createIncome(incomeInput: IncomeInput): Income
-    removeIncome(incomeId: ID!): Income!
-    updateIncome(incomeId: ID!, incomeInput: IncomeInput): Income!
+    createIncome (incomeInput: IncomeInput): Income
+    removeIncome (incomeId: ID!): Income!
+    updateIncome (incomeId: ID!, incomeInput: IncomeInput): Income!
 
-    createEvent(eventInput: EventInput): Event
-    createUser(userInput: UserInput): User
+    createEvent (eventInput: EventInput): Event
+    createUser (userInput: UserInput): User
+    updateUser (userId: ID!, name: String!, surname: String!, email: String!, updatedAt: String!): User!
 
-    bookEvent(eventId: ID!): Booking!
-    cancelBooking(bookingId: ID!): Event!
+    bookEvent (eventId: ID!): Booking!
+    cancelBooking (bookingId: ID!): Event!
 }
 
 schema {

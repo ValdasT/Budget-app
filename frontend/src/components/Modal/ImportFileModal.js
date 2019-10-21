@@ -11,7 +11,7 @@ import { FiDelete } from "react-icons/fi";
 
 import './Modal.css';
 
-const InfoModal = () => {
+const ImportModal = () => {
     const { modalInfo, showImportModal, setShowIportModal } = useContext(ModalContext);
     const { submitExpenseFromImport, setAllExpenses } = useContext(ExpensesContext);
     let [allFiles, setAllFiles] = useState([]);
@@ -182,7 +182,7 @@ const InfoModal = () => {
         }
     }, []);
 
-    const { isDragActive, getRootProps, getInputProps, isDragReject, acceptedFiles, rejectedFiles } = useDropzone({
+    const { isDragActive, getRootProps, getInputProps, isDragReject, rejectedFiles } = useDropzone({
         onDrop,
         // accept: 'text/csv,application/pdf,text/xml,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         accept: 'text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -250,4 +250,4 @@ const InfoModal = () => {
     );
 };
 
-export default InfoModal;
+export default ImportModal;

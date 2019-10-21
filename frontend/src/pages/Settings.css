@@ -1,0 +1,33 @@
+.settings-form {
+    width: 25rem;
+    max-width: 80%;
+    margin: auto;
+  }
+
+  .settings-tabs {
+    width: 25rem;
+    max-width: 100%;
+    margin: auto;
+  }
+
+  .nav-item{
+    color: #aeaeae;
+  } 
+
+.nav-link:hover{
+    color: #ea97c4 !important;
+}
+
+  .update-btn {
+    width:100%;
+  }
+
+  #formContentUserSettings {
+    border-radius: 10px 10px 10px 10px;
+    padding: 30px;
+    width: 90%;
+    max-width: 450px;
+    position: relative;
+    text-align: center;
+  }
+

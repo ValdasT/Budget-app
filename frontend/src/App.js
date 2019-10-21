@@ -8,6 +8,7 @@ import BookingsPage from './pages/Bookings';
 import EventsPage from './pages/Events';
 import TestPage from './pages/Test';
 import Expenses from './pages/Expenses';
+import Settings from './pages/Settings';
 import MainNavigation from './components/Navigation/MainNavigation';
 import AuthContext from './context/auth-context';
 
@@ -74,6 +75,9 @@ class App extends Component {
                 <Route path="/events" component={EventsPage} />
                 {this.state.token && (
                   <Route path="/bookings" component={BookingsPage} />
+                  )}
+                {this.state.token && (
+                  <Route path="/settings" component={Settings} />
                 )}
                   {!this.state.token && <Redirect to="/auth" exact />}
               </Switch>
