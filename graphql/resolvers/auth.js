@@ -108,5 +108,16 @@ module.exports = {
             console.log(err);
             throw err;
         }
-    }
+    },
+    settingsData: async (args, req) => {
+        if (!req.isAuth) {
+            throw new Error('Unauthenticated!');
+        }
+        try {
+            const settings = await Settings.find({ creator: req.userId });
+            return settings;
+        } catch (err) {
+            throw err;
+        }
+    },
 };

@@ -141,6 +141,8 @@ type RootQuery {
     incomesFilter (dateFrom: String!, dateTo: String!): [Income!]!
 
     userData: [User!]!
+
+    settingsData: [Settings!]!
 }
 
 type RootMutation {

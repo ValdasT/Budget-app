@@ -7,14 +7,17 @@ import ModalContext from '../context/modal-context';
 import InfoModal from '../components/Modal/Modal';
 import Spinner from '../components/Spinner/Spinner';
 import { FiUser, FiSettings } from "react-icons/fi";
+import { MdEuroSymbol } from 'react-icons/md';
 import './Settings.css';
 
 import AuthContext from '../context/auth-context';
 
 const Settings = () => {
+    let [err, seterr] = useState({ newCategorie: false });
     let currentUser = AuthContext._currentValue;
     let [userData, setUserData] = useState({});
     let [editableUserData, setEditableUserData] = useState({});
+    let [settingsData, setSettingsData] = useState({});
     let [isLoading, setIsLoading] = useState(false);
 
     let [showInfoModal, setShowInfoModal] = useState(false);
@@ -31,6 +34,7 @@ const Settings = () => {
 
     useEffect(() => {
         getUserData();
+        getSettingsData();
     }, []);
 
     const getUserData = () => {
@@ -133,6 +137,82 @@ const Settings = () => {
             });
     };
 
+
+
+    const getSettingsData = () => {
+        setIsLoading(true);
+        const requestBody = {
+            query: `
+              query {
+                settingsData {
+                    _id
+                    dailyBudget
+                    weeklyBudget
+                    monthlyBudget
+                    categories
+                    members
+                  }
+              }`
+        };
+        return fetch('/graphql', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + currentUser.token
+            }
+        })
+            .then(res => {
+                setIsLoading(false);
+                if (res.status !== 200 && res.status !== 201) {
+                    throw new Error('Failed!');
+                }
+                return res.json();
+            })
+            .then(resData => {
+                setSettingsData(resData.data.settingsData[0]);
+            })
+            .catch(err => {
+                setIsLoading(false);
+                modalInfo(true, 'Error', err);
+                console.log(err);
+                return err;
+            });
+    };
+
+    const validatePrice = (event) => {
+        let price = event.target.value;
+        if (price.length === 1 && price === '.') {
+            price = price.slice(0, -1);
+        }
+        if (price.length === 2 && price === '00') {
+            price = price.slice(0, -1);
+        }
+        if (price.split('.').length - 1 > 1) {
+            price = price.slice(0, -1);
+        }
+        price = (price.indexOf('.') >= 0) ? (price.substr(0, price.indexOf('.')) + price.substr(price.indexOf('.'), 3)) : price;
+        return price.replace(/[^\d.-]/g, '').replace('-', '');
+    };
+
+    const addCategory = (event, oldCategory) => {
+        if (event.target.value === undefined || !event.target.value.length) {
+            seterr({ ...err, newCategorie: true });
+            return oldCategory;
+        } else {
+            oldCategory += ` ${event.target.value};`;
+            return oldCategory;
+        }
+    };
+    const clearCategory = event => {
+        return '';
+    };
+
+    const emitChangesToCategory = event => {
+        seterr({ ...err, newCategorie: false });
+        return event.target.value;
+    };
+
     return (
         isLoading ? <Spinner /> :
             <Fragment>
@@ -195,7 +275,89 @@ const Settings = () => {
                         </Tab>
                         <Tab eventKey="systemSettings" title={key === 'systemSettings' ? <span style={{ color: '#ea97c4' }}><FiSettings size={20} />&nbsp; System </span> :
                             <span><FiSettings size={20} color={'#aeaeae'} />&nbsp; System </span>}>
-                            <p>11111</p>
+                            <Formik
+                                enableReinitialize={true}
+                                initialValues={{
+                                    dailyBudget: settingsData.dailyBudget || '',
+                                    weeklyBudget: settingsData.weeklyBudget || '',
+                                    monthlyBudget: settingsData.monthlyBudget || '',
+                                    categories: settingsData.categories || '',
+                                    newCategorie: '',
+                                    members: settingsData.members || '',
+                                }}
+                                validationSchema={Yup.object().shape({
+                                    dailyBudget: Yup.number(),
+                                    weeklyBudget: Yup.number(),
+                                    monthlyBudget: Yup.number(),
+                                    categories: Yup.string(),
+                                    newCategorie: Yup.string(),
+                                })}
+                                onSubmit={fields => {
+                                    console.log(fields);
+                                    // updateUser(fields);
+                                }}
+                                render={({ errors, values, touched, handleChange, setFieldValue, handleBlur, }) => (
+                                    <Form id="formContentSystemSettings">
+                                        <div className="form-group row col-sm-12">
+                                            <div className="col-sm-6 ">
+                                                <div className="form-group row">
+                                                    <label className="col-sm-3" htmlFor="title">Daily budget</label>
+                                                    <div className="col-sm-3">
+                                                        <div className="input-group ">
+                                                            <input placeholder="0.00" name="dailyBudget" onChange={e => { setFieldValue('dailyBudget', validatePrice(e)); }} value={values.dailyBudget} className={'form-control' + (errors.dailyBudget && touched.dailyBudget ? ' is-invalid' : '')} />
+                                                            <div className="input-group-append">
+                                                                <div className="input-group-text"><MdEuroSymbol className="" size={20} /></div>
+                                                            </div>
+                                                            <ErrorMessage name="dailyBudget" component="div" className="invalid-feedback" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="form-group row">
+                                                    <label className="col-sm-3" htmlFor="title">Weekly budget</label>
+                                                    <div className="col-sm-3">
+                                                        <div className="input-group mb-2 mr-sm-2">
+                                                            <input placeholder="0.00" name="weeklyBudget" onChange={e => { setFieldValue('weeklyBudget', validatePrice(e)); }} value={values.weeklyBudget} className={'form-control' + (errors.weeklyBudget && touched.weeklyBudget ? ' is-invalid' : '')} />
+                                                            <div className="input-group-append">
+                                                                <div className="input-group-text"><MdEuroSymbol className="" size={20} /></div>
+                                                            </div>
+                                                            <ErrorMessage name="weeklyBudget" component="div" className="invalid-feedback" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="form-group row">
+                                                    <label className="col-sm-3" htmlFor="title">Monthly budget</label>
+                                                    <div className="col-sm-3">
+                                                        <div className="input-group mb-2 mr-sm-2">
+                                                            <input placeholder="0.00" name="monthlyBudget" onChange={e => { setFieldValue('monthlyBudget', validatePrice(e)); }} value={values.monthlyBudget} className={'form-control' + (errors.monthlyBudget && touched.monthlyBudget ? ' is-invalid' : '')} />
+                                                            <div className="input-group-append">
+                                                                <div className="input-group-text"><MdEuroSymbol className="" size={20} /></div>
+                                                            </div>
+                                                            <ErrorMessage name="monthlyBudget" component="div" className="invalid-feedback" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-6 ">
+                                                <div className="form-group row">
+                                                    <label className="col-sm-3" htmlFor="title">Categories</label>
+                                                    <div className="col-sm-6">
+                                                        <div className="form-group row">
+                                                            <input placeholder="Category name" name="newCategorie" onChange={e => { setFieldValue('newCategorie', emitChangesToCategory(e)); }} value={values.newCategorie} className={'form-control col-sm-8 mr-1' + (err.newCategorie ? ' is-invalid' : '')} />
+                                                            <button type="button" onClick={e => { setFieldValue('categories', addCategory(e, values.categories)); setFieldValue('newCategorie', clearCategory(e)); }} value={values.newCategorie} className="col-sm-2 btn btn_main">Add</button>
+                                                            <ErrorMessage name="newCategorie" component="div" className="invalid-feedback" />
+                                                            {err.newCategorie ? <div className="invalid-feedback"> Category field can't be empty</div> : null}
+                                                        </div>
+                                                        <div>{values.categories}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <button type="submit" className="btn btn_main update-btn">Update</button>
+                                        </div>
+                                    </Form>
+                                )}
+                            />
                         </Tab>
                     </Tabs>
                 </ModalContext.Provider>
