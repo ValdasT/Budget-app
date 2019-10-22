@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../../models/user');
+const Settings = require('../../models/settings');
+const { transformSetting } = require('./merge');
 
 module.exports = {
     createUser: async args => {
@@ -77,6 +79,33 @@ module.exports = {
                 _id: user.id
             }
         } catch (err) {
+            throw err;
+        }
+    },
+    createSettings: async args => {
+        const settings = new Settings({
+            dailyBudget: args.settingsInput.dailyBudget,
+            weeklyBudget: args.settingsInput.weeklyBudget,
+            monthlyBudget: args.settingsInput.monthlyBudget,
+            categories: 'Other',
+            members: args.settingsInput.members,
+            creator: args.settingsInput.userId
+        });
+        let createdSettings;
+        try {
+            const result = await settings.save();
+            createdSettings = transformSetting(result);
+            const creator = await User.findById(args.settingsInput.userId);
+
+            if (!creator) {
+                throw new Error('User not found.');
+            }
+            creator.settings.push(settings);
+            await creator.save();
+
+            return createdSettings;
+        } catch (err) {
+            console.log(err);
             throw err;
         }
     }

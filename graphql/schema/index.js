@@ -47,7 +47,12 @@ type Category {
 
 type Settings{
   _id: ID!
-  categories: [Category!]
+  dailyBudget: String!
+  weeklyBudget: String!
+  monthlyBudget: String!
+  categories: String!
+  members: String!
+  creator: User!
 }
 
 type User {
@@ -114,6 +119,15 @@ input IncomeInput {
   updatedAt: String!
 }
 
+input SettingsInput {
+  dailyBudget: String!
+  weeklyBudget: String!
+  monthlyBudget: String!
+  categories: String!
+  members: String!
+  userId: String!
+}
+
 type RootQuery {
     allFiles: [File!]!
     events: [Event!]!
@@ -145,6 +159,8 @@ type RootMutation {
     createEvent (eventInput: EventInput): Event
     createUser (userInput: UserInput): User
     updateUser (userId: ID!, name: String!, surname: String!, email: String!, updatedAt: String!): User!
+
+    createSettings(settingsInput: SettingsInput): Settings
 
     bookEvent (eventId: ID!): Booking!
     cancelBooking (bookingId: ID!): Event!

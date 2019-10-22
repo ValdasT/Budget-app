@@ -105,16 +105,16 @@ const AuthPage = () => {
                 return res.json();
             })
             .then(res => {
-                setIsLoading(false);
                 if (res.data.login) {
+                    setIsLoading(false);
                     login(
                         res.data.login.token,
                         res.data.login.userId,
 
                     );
                 } else {
-                    modalInfo(true, 'Confirmation',`Hi ${values.firstName} ${values.lastName}, your account was created. Now You can sign in.`);
-                    switchModeHandler();
+                    let args = { userId: res.data.createUser._id };
+                    createSettings(args, values);
                 }
             })
             .catch(err => {
@@ -123,6 +123,57 @@ const AuthPage = () => {
                 throw err;
             });
     };
+
+    const createSettings = (args, values) => {
+        let requestBody = {
+            query: `
+            mutation CreateSettings($dailyBudget: String!, $weeklyBudget: String!, $monthlyBudget: String!, $members: String!, $categories: String!, $userId: String! ) {
+                createSettings(settingsInput:{dailyBudget: $dailyBudget, weeklyBudget: $weeklyBudget, monthlyBudget: $monthlyBudget, members:$members, categories:$categories, userId: $userId}) {
+                    _id
+                   
+                  }
+              }
+      `,
+            variables: {
+                dailyBudget: '',
+                weeklyBudget: '',
+                monthlyBudget: '',
+                members: '',
+                categories: '',
+                userId: args.userId,
+            }
+        };
+        fetch('/graphql', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(res => {
+                if (!res.ok) {
+                    setIsLoading(false);
+                    throw (res.statusText);
+                }
+                return res.json();
+            })
+            .then(res => {
+                if (res.errors) {
+                    throw (res.errors[0].message);
+                }
+                if (res.data) {
+                    modalInfo(true, 'Confirmation',`Hi ${values.firstName} ${values.lastName}, your account was created. Now You can sign in.`);
+                    switchModeHandler();
+                    setIsLoading(false);
+                }
+            })
+            .catch(err => {
+                setIsLoading(false);
+                console.log(err);
+                modalInfo(true, 'Error', err);
+                throw err;
+            });
+    }; 
 
     return (
         <ModalContext.Provider value={{ modalHeader, modalText, showInfoModal, setShowInfoModal }}>
