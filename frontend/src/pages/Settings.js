@@ -153,6 +153,7 @@ const Settings = () => {
                     monthlyBudget
                     categories
                     members
+                    currency
                   }
               }`
         };
@@ -309,6 +310,7 @@ const Settings = () => {
                                     categories: settingsData.categories || '',
                                     newCategorie: '',
                                     members: settingsData.members || '',
+                                    currency: settingsData.currency || ''
                                 }}
                                 validationSchema={Yup.object().shape({
                                     dailyBudget: Yup.number(),
@@ -316,6 +318,8 @@ const Settings = () => {
                                     monthlyBudget: Yup.number(),
                                     categories: Yup.string(),
                                     newCategorie: Yup.string(),
+                                    currency: Yup.string()
+                                        .required('Currency is required'),
                                 })}
                                 onSubmit={fields => {
                                     console.log(fields);
@@ -334,7 +338,10 @@ const Settings = () => {
                                                         <div className="input-group ">
                                                             <input placeholder="0.00" name="dailyBudget" onChange={e => { setFieldValue('dailyBudget', validatePrice(e)); }} value={values.dailyBudget} className={'form-control' + (errors.dailyBudget && touched.dailyBudget ? ' is-invalid' : '')} />
                                                             <div className="input-group-append">
-                                                                <div className="input-group-text"><MdEuroSymbol className="" size={20} /></div>
+                                                                {
+                                                                    values.currency === 'GBD' ? <div className="input-group-text"><span style={{ fontSize: '15px' }} >&pound;</span></div> : values.currency === 'Dollar' ?
+                                                                        <div className="input-group-text"><span style={{ fontSize: '15px' }} >$</span></div> : <div className="input-group-text"><span style={{ fontSize: '15px' }} >&euro;</span></div>
+                                                                }
                                                             </div>
                                                             <ErrorMessage name="dailyBudget" component="div" className="invalid-feedback" />
                                                         </div>
@@ -346,7 +353,10 @@ const Settings = () => {
                                                         <div className="input-group mb-2 mr-sm-2">
                                                             <input placeholder="0.00" name="weeklyBudget" onChange={e => { setFieldValue('weeklyBudget', validatePrice(e)); }} value={values.weeklyBudget} className={'form-control' + (errors.weeklyBudget && touched.weeklyBudget ? ' is-invalid' : '')} />
                                                             <div className="input-group-append">
-                                                                <div className="input-group-text"><MdEuroSymbol className="" size={20} /></div>
+                                                                {
+                                                                    values.currency === 'GBD' ? <div className="input-group-text"><span style={{ fontSize: '15px' }} >&pound;</span></div> : values.currency === 'Dollar' ?
+                                                                        <div className="input-group-text"><span style={{ fontSize: '15px' }} >$</span></div> : <div className="input-group-text"><span style={{ fontSize: '15px' }} >&euro;</span></div>
+                                                                }
                                                             </div>
                                                             <ErrorMessage name="weeklyBudget" component="div" className="invalid-feedback" />
                                                         </div>
@@ -358,10 +368,26 @@ const Settings = () => {
                                                         <div className="input-group mb-2 mr-sm-2">
                                                             <input placeholder="0.00" name="monthlyBudget" onChange={e => { setFieldValue('monthlyBudget', validatePrice(e)); }} value={values.monthlyBudget} className={'form-control' + (errors.monthlyBudget && touched.monthlyBudget ? ' is-invalid' : '')} />
                                                             <div className="input-group-append">
-                                                                <div className="input-group-text"><MdEuroSymbol className="" size={20} /></div>
+                                                                {
+                                                                    values.currency === 'GBD' ? <div className="input-group-text"><span style={{ fontSize: '15px' }} >&pound;</span></div> : values.currency === 'Dollar' ?
+                                                                        <div className="input-group-text"><span style={{ fontSize: '15px' }} >$</span></div> : <div className="input-group-text"><span style={{ fontSize: '15px' }} >&euro;</span></div>
+                                                                }
                                                             </div>
                                                             <ErrorMessage name="monthlyBudget" component="div" className="invalid-feedback" />
                                                         </div>
+                                                    </div>
+                                                </div>
+                                                <div className="form-group row">
+                                                    <label className="col-sm-5" htmlFor="title">Currency</label>
+                                                    <div className="col-sm-6">
+                                                        <select name="currency" onChange={handleChange}
+                                                            onBlur={handleBlur} value={values.currency} className={'custom-select mr-sm-2 form-control' + (errors.currency && touched.currency ? ' is-invalid' : '')} id="inlineFormCustomSelect">
+                                                            <option value="">Select a currency</option>
+                                                            <option value="Euro">Euro &euro;</option>
+                                                            <option value="Dollar">Dollar $</option>
+                                                            <option value="GBD">Pound &pound;</option>
+                                                        </select>
+                                                        <ErrorMessage name="currency" component="div" className="invalid-feedback" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -403,7 +429,7 @@ const Settings = () => {
                                                 </div>
                                             </div>
                                             <div className="col-sm-4 ">
-                                            <div className="p-2 settings-form">
+                                                <div className="p-2 settings-form">
                                                     <h4>Fammily settings</h4>
                                                 </div>
                                             </div>

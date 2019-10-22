@@ -23,6 +23,10 @@ const settingsSchema = new Schema({
         type: String,
         required: false
     },
+    currency: {
+        type: String,
+        required: false
+    },
     creator: {
         type: Schema.Types.ObjectId,
         ref: 'User'

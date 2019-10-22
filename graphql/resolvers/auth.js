@@ -89,7 +89,8 @@ module.exports = {
             monthlyBudget: args.settingsInput.monthlyBudget,
             categories: 'Other',
             members: args.settingsInput.members,
-            creator: args.settingsInput.userId
+            creator: args.settingsInput.userId,
+            currency: 'Euro'
         });
         let createdSettings;
         try {

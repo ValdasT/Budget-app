@@ -127,8 +127,8 @@ const AuthPage = () => {
     const createSettings = (args, values) => {
         let requestBody = {
             query: `
-            mutation CreateSettings($dailyBudget: String!, $weeklyBudget: String!, $monthlyBudget: String!, $members: String!, $categories: String!, $userId: String! ) {
-                createSettings(settingsInput:{dailyBudget: $dailyBudget, weeklyBudget: $weeklyBudget, monthlyBudget: $monthlyBudget, members:$members, categories:$categories, userId: $userId}) {
+            mutation CreateSettings($dailyBudget: String!, $weeklyBudget: String!, $monthlyBudget: String!, $members: String!, $categories: String!,  $currency: String!, $userId: String! ) {
+                createSettings(settingsInput:{dailyBudget: $dailyBudget, weeklyBudget: $weeklyBudget, monthlyBudget: $monthlyBudget, members:$members, categories:$categories,currency:$currency, userId: $userId}) {
                     _id
                    
                   }
@@ -140,6 +140,7 @@ const AuthPage = () => {
                 monthlyBudget: '',
                 members: '',
                 categories: '',
+                currency: '',
                 userId: args.userId,
             }
         };

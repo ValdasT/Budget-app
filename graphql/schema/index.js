@@ -52,6 +52,7 @@ type Settings{
   monthlyBudget: String!
   categories: String!
   members: String!
+  currency: String!
   creator: User!
 }
 
@@ -125,6 +126,7 @@ input SettingsInput {
   monthlyBudget: String!
   categories: String!
   members: String!
+  currency: String!
   userId: String!
 }
 
