@@ -8,12 +8,14 @@ import InfoModal from '../components/Modal/Modal';
 import Spinner from '../components/Spinner/Spinner';
 import { FiUser, FiSettings } from "react-icons/fi";
 import { MdEuroSymbol } from 'react-icons/md';
+import { FaRegTimesCircle } from "react-icons/fa";
 import './Settings.css';
 
 import AuthContext from '../context/auth-context';
 
 const Settings = () => {
-    let [err, seterr] = useState({ newCategorie: false });
+    let [err, setErr] = useState({ newCategorie: false });
+    let [categories, setCategories] = useState([]);
     let currentUser = AuthContext._currentValue;
     let [userData, setUserData] = useState({});
     let [editableUserData, setEditableUserData] = useState({});
@@ -171,6 +173,7 @@ const Settings = () => {
             })
             .then(resData => {
                 setSettingsData(resData.data.settingsData[0]);
+                setCategories(resData.data.settingsData[0].categories.split(';'));
             })
             .catch(err => {
                 setIsLoading(false);
@@ -197,20 +200,42 @@ const Settings = () => {
 
     const addCategory = (event, oldCategory) => {
         if (event.target.value === undefined || !event.target.value.length) {
-            seterr({ ...err, newCategorie: true });
+            setErr({ ...err, newCategorie: true });
             return oldCategory;
         } else {
-            oldCategory += ` ${event.target.value};`;
-            return oldCategory;
+            event.target.value = event.target.value.toLowerCase();
+            let newCategory = event.target.value.charAt(0).toUpperCase() + event.target.value.slice(1);
+            let found = false;
+            categories.forEach(category => {
+                if (category === newCategory) {
+                    found = true;
+                }
+            });
+            if (found) {
+                modalInfo(true, 'Error', 'This category already in the category list.');
+            } else {
+                setCategories([...categories, newCategory]);
+            }
         }
     };
+
+    const removeCategory = category => {
+        if (categories.length === 1) {
+            modalInfo(true, 'Error', 'You can\'t delete all categories.');
+        } else {
+            setCategories(categories.filter(item => item !== category));
+        }
+    };
+
     const clearCategory = event => {
         return '';
     };
 
     const emitChangesToCategory = event => {
-        seterr({ ...err, newCategorie: false });
-        return event.target.value;
+        if (err.newCategorie) {
+            setErr({ ...err, newCategorie: false });
+        }
+        return event.target.value.replace(/[//|/;&$%@"<>()+{}.',=_~`!#^*/?]/g, '');
     };
 
     return (
@@ -240,10 +265,10 @@ const Settings = () => {
                                 onSubmit={fields => {
                                     updateUser(fields);
                                 }}
-                                render={({ errors, status, touched }) => (
+                                render={({ errors, touched }) => (
                                     <Form className="settings-form" id="formContentUserSettings">
                                         <div className="p-2">
-                                            {/* <h4>User settings</h4> */}
+                                            <h4>User settings</h4>
                                         </div>
                                         <div className="form-group row">
                                             <label className="col-sm-4 col-form-label" htmlFor="firstName">First Name</label>
@@ -298,11 +323,14 @@ const Settings = () => {
                                 }}
                                 render={({ errors, values, touched, handleChange, setFieldValue, handleBlur, }) => (
                                     <Form id="formContentSystemSettings">
-                                        <div className="form-group row col-sm-12">
-                                            <div className="col-sm-6 ">
+                                        <div className="form-group row col-sm-12" style={{ paddingTop: '25px' }}>
+                                            <div className="col-sm-4 ">
+                                                <div className="p-2 settings-form">
+                                                    <h4>Budget settings</h4>
+                                                </div>
                                                 <div className="form-group row">
-                                                    <label className="col-sm-3" htmlFor="title">Daily budget</label>
-                                                    <div className="col-sm-3">
+                                                    <label className="col-sm-5" htmlFor="title">Daily budget</label>
+                                                    <div className="col-sm-5">
                                                         <div className="input-group ">
                                                             <input placeholder="0.00" name="dailyBudget" onChange={e => { setFieldValue('dailyBudget', validatePrice(e)); }} value={values.dailyBudget} className={'form-control' + (errors.dailyBudget && touched.dailyBudget ? ' is-invalid' : '')} />
                                                             <div className="input-group-append">
@@ -313,8 +341,8 @@ const Settings = () => {
                                                     </div>
                                                 </div>
                                                 <div className="form-group row">
-                                                    <label className="col-sm-3" htmlFor="title">Weekly budget</label>
-                                                    <div className="col-sm-3">
+                                                    <label className="col-sm-5" htmlFor="title">Weekly budget</label>
+                                                    <div className="col-sm-5">
                                                         <div className="input-group mb-2 mr-sm-2">
                                                             <input placeholder="0.00" name="weeklyBudget" onChange={e => { setFieldValue('weeklyBudget', validatePrice(e)); }} value={values.weeklyBudget} className={'form-control' + (errors.weeklyBudget && touched.weeklyBudget ? ' is-invalid' : '')} />
                                                             <div className="input-group-append">
@@ -325,8 +353,8 @@ const Settings = () => {
                                                     </div>
                                                 </div>
                                                 <div className="form-group row">
-                                                    <label className="col-sm-3" htmlFor="title">Monthly budget</label>
-                                                    <div className="col-sm-3">
+                                                    <label className="col-sm-5" htmlFor="title">Monthly budget</label>
+                                                    <div className="col-sm-5">
                                                         <div className="input-group mb-2 mr-sm-2">
                                                             <input placeholder="0.00" name="monthlyBudget" onChange={e => { setFieldValue('monthlyBudget', validatePrice(e)); }} value={values.monthlyBudget} className={'form-control' + (errors.monthlyBudget && touched.monthlyBudget ? ' is-invalid' : '')} />
                                                             <div className="input-group-append">
@@ -337,18 +365,46 @@ const Settings = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="col-sm-6 ">
+                                            <div className="col-sm-4 ">
+                                                <div className="p-2 settings-form">
+                                                    <h4>Categories settings</h4>
+                                                </div>
                                                 <div className="form-group row">
-                                                    <label className="col-sm-3" htmlFor="title">Categories</label>
+                                                    <label className="col-sm-4" htmlFor="title">Add category</label>
                                                     <div className="col-sm-6">
                                                         <div className="form-group row">
                                                             <input placeholder="Category name" name="newCategorie" onChange={e => { setFieldValue('newCategorie', emitChangesToCategory(e)); }} value={values.newCategorie} className={'form-control col-sm-8 mr-1' + (err.newCategorie ? ' is-invalid' : '')} />
-                                                            <button type="button" onClick={e => { setFieldValue('categories', addCategory(e, values.categories)); setFieldValue('newCategorie', clearCategory(e)); }} value={values.newCategorie} className="col-sm-2 btn btn_main">Add</button>
+                                                            <button type="button" onClick={e => { setFieldValue('categories', addCategory(e, values.categories)); setFieldValue('newCategorie', clearCategory(e)); }} value={values.newCategorie} className="col-sm-3 btn btn_main">Add</button>
                                                             <ErrorMessage name="newCategorie" component="div" className="invalid-feedback" />
                                                             {err.newCategorie ? <div className="invalid-feedback"> Category field can't be empty</div> : null}
                                                         </div>
-                                                        <div>{values.categories}</div>
+
                                                     </div>
+                                                </div>
+
+                                                <div className="form-group row">
+                                                    <label className="col-sm-4" htmlFor="title">All categories</label>
+                                                    <div className="col-sm-8">
+                                                        <ul className="list-group col-sm-9">
+                                                            {
+                                                                categories.map((category) => (
+                                                                    <li className='row' key={category}>
+                                                                        <span className='list-group-item list-item col-sm-12'>{category}
+                                                                            <button className='btn card_removeButton' type='button' onClick={() => removeCategory(category)}>
+                                                                                <i><FaRegTimesCircle size={20} /></i>
+                                                                            </button>
+                                                                        </span>
+                                                                    </li>
+                                                                ))
+                                                            }
+                                                        </ul>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-4 ">
+                                            <div className="p-2 settings-form">
+                                                    <h4>Fammily settings</h4>
                                                 </div>
                                             </div>
                                         </div>

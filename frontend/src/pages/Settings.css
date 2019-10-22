@@ -4,13 +4,6 @@
     margin: auto;
   }
 
-
-  .system-tab {
-    width: 30rem;
-    max-width: 100%;
-    margin: auto;
-  }
-
   .nav-item{
     color: #aeaeae;
   } 
@@ -31,4 +24,11 @@
     position: relative;
     text-align: center;
   }
+
+.list-item{
+  word-break: break-all;
+  border: 1px solid transparent;
+  border-color: #dfe0e2;
+  padding: 5px;
+}
 

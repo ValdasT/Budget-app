@@ -50,7 +50,6 @@ module.exports = {
     },
 
     createIncome: async (args, req) => {
-        console.log(args);
         if (!req.isAuth) {
             throw new Error('Unauthenticated!');
         }
@@ -87,7 +86,6 @@ module.exports = {
             throw new Error('Unauthenticated!');
         }
         try {
-            console.log(args);
             const income = await Income.findByIdAndUpdate(args.incomeId,
                 {
                     title: args.incomeInput.title,
@@ -106,28 +104,4 @@ module.exports = {
             throw err;
         }
     }
-
-    // updateExpense: async (args, req) => {
-    //     if (!req.isAuth) {
-    //         throw new Error('Unauthenticated!');
-    //     }
-    //     try {
-    //         const expense = await Expense.findByIdAndUpdate(args.expenseId,
-    //             {
-    //                 title: args.expenseInput.title,
-    //                 description: args.expenseInput.description,
-    //                 price: args.expenseInput.price,
-    //                 group: args.expenseInput.group,
-    //                 createdAt: args.expenseInput.createdAt,
-    //                 updatedAt: args.expenseInput.updatedAt
-    //             },
-    //             { new: true });
-    //         return {
-    //             ...expense._doc,
-    //             _id: expense.id
-    //         }
-    //     } catch (err) {
-    //         throw err;
-    //     }
-    // }
 }
