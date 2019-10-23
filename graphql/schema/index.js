@@ -164,7 +164,8 @@ type RootMutation {
     createUser (userInput: UserInput): User
     updateUser (userId: ID!, name: String!, surname: String!, email: String!, updatedAt: String!): User!
 
-    createSettings(settingsInput: SettingsInput): Settings
+    createSettings (settingsInput: SettingsInput): Settings
+    updateSettings (settingsId: ID!, dailyBudget: String!, weeklyBudget: String!, monthlyBudget: String!, categories: String!, members: String!, currency: String!): Settings!
 
     bookEvent (eventId: ID!): Booking!
     cancelBooking (bookingId: ID!): Event!

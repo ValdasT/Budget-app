@@ -121,4 +121,27 @@ module.exports = {
             throw err;
         }
     },
+    updateSettings: async (args, req) => {
+        if (!req.isAuth) {
+            throw new Error('Unauthenticated!');
+        }
+        try {
+            const settings = await Settings.findByIdAndUpdate(args.settingsId,
+                {
+                    dailyBudget:args.dailyBudget,
+                    weeklyBudget: args.weeklyBudget,
+                    monthlyBudget:args.monthlyBudget,
+                    categories: args.categories,
+                    members: args.members,
+                    currency: args.currency
+                },
+                { new: true });
+            return {
+                ...settings._doc,
+                _id: settings.id
+            }
+        } catch (err) {
+            throw err;
+        }
+    },
 };

@@ -7,15 +7,19 @@ import ModalContext from '../context/modal-context';
 import InfoModal from '../components/Modal/Modal';
 import Spinner from '../components/Spinner/Spinner';
 import { FiUser, FiSettings } from "react-icons/fi";
-import { MdEuroSymbol } from 'react-icons/md';
 import { FaRegTimesCircle } from "react-icons/fa";
 import './Settings.css';
 
 import AuthContext from '../context/auth-context';
 
 const Settings = () => {
-    let [err, setErr] = useState({ newCategorie: false });
+    let [err, setErr] = useState({
+        newCategorie: false,
+        newMember: false,
+        emailValidation: false
+    });
     let [categories, setCategories] = useState([]);
+    let [members, setMembers] = useState([]);
     let currentUser = AuthContext._currentValue;
     let [userData, setUserData] = useState({});
     let [editableUserData, setEditableUserData] = useState({});
@@ -32,7 +36,7 @@ const Settings = () => {
         setModalText(text);
     };
 
-    const [key, setKey] = useState('userSettings');
+    const [key, setKey] = useState('systemSettings');
 
     useEffect(() => {
         getUserData();
@@ -173,14 +177,108 @@ const Settings = () => {
                 return res.json();
             })
             .then(resData => {
+                let membersList = [];
                 setSettingsData(resData.data.settingsData[0]);
                 setCategories(resData.data.settingsData[0].categories.split(';'));
+                resData.data.settingsData[0].members.split(';').forEach(e => {
+                    if (e.length) {
+                        membersList.push(e);
+                    }
+                });
+                setMembers(membersList);
             })
             .catch(err => {
                 setIsLoading(false);
                 modalInfo(true, 'Error', err);
                 console.log(err);
                 return err;
+            });
+    };
+
+    const updateSettings = (fields) => {
+        setIsLoading(true);
+        let allMemebers = '';
+        let allCategories = '';
+
+        categories.forEach((category, i) => {
+            if (categories.length != i + 1) {
+                allCategories += `${category};`;
+            } else {
+                allCategories += category;
+            }
+        });
+        if (members.length) {
+            members.forEach((member, i) => {
+                if (members.length != i + 1) {
+                    allMemebers += `${member};`;
+                } else {
+                    allMemebers += member;
+                }
+            });
+        }
+
+        let requestBody = {
+            query: `
+
+                              mutation UpdateSettings($id: ID!, $dailyBudget: String!, $weeklyBudget: String!, $monthlyBudget: String!, $categories: String!, $members: String!, $currency: String!) {
+                                updateSettings(settingsId: $id, dailyBudget: $dailyBudget, weeklyBudget: $weeklyBudget, monthlyBudget: $monthlyBudget, categories: $categories, members: $members, currency: $currency) {
+                                    _id
+                                    dailyBudget
+                                    weeklyBudget
+                                    monthlyBudget
+                                    categories
+                                    members
+                                    currency
+                                  }
+                              }
+                            `,
+            variables: {
+                id: settingsData._id,
+                dailyBudget: fields.dailyBudget,
+                weeklyBudget: fields.weeklyBudget,
+                monthlyBudget: fields.monthlyBudget,
+                categories: allCategories,
+                members: allMemebers,
+                currency: fields.currency
+            }
+        };
+
+        fetch('/graphql', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + currentUser.token
+            }
+        })
+            .then(res => {
+                if (!res.ok) {
+                    setIsLoading(false);
+                    throw (res.statusText);
+                }
+                return res.json();
+            })
+            .then(res => {
+                if (res.errors) {
+                    throw (res.errors[0].message);
+                }
+                let membersList = [];
+                setSettingsData(res.data.updateSettings);
+                setCategories(res.data.updateSettings.categories.split(';'));
+                res.data.updateSettings.members.split(';').forEach(e => {
+                    if (e.length) {
+                        membersList.push(e);
+                    }
+                });
+                setMembers(membersList);
+                setIsLoading(false);
+                modalInfo(true, 'Confirmation', 'Settings was updated');
+            })
+            .catch(err => {
+                setIsLoading(false);
+                console.log(err);
+                modalInfo(true, 'Error', err);
+                throw err;
             });
     };
 
@@ -237,6 +335,46 @@ const Settings = () => {
             setErr({ ...err, newCategorie: false });
         }
         return event.target.value.replace(/[//|/;&$%@"<>()+{}.',=_~`!#^*/?]/g, '');
+    };
+
+    const addMember = (event, oldMember, error) => {
+        if (event.target.value === undefined || !event.target.value.length) {
+            setErr({ ...err, newMember: true, emailValidation: false });
+            return oldMember;
+        } else if (error.newMember) {
+            setErr({ ...err, emailValidation: true });
+        } else {
+            let newMember = event.target.value.toLowerCase();
+            let found = false;
+            members.forEach(member => {
+                if (member === newMember) {
+                    found = true;
+                }
+            });
+            if (found) {
+                modalInfo(true, 'Error', 'This member already in the members list.');
+            } else {
+                setMembers([...members, newMember]);
+            }
+        }
+    };
+
+    const removeMember = member => {
+        setMembers(members.filter(item => item !== member));
+    };
+
+    const clearMember = event => {
+        return '';
+    };
+
+    const emitChangesToMember = event => {
+        if (err.emailValidation) {
+            setErr({ ...err, emailValidation: false });
+        }
+        if (err.newMember) {
+            setErr({ ...err, newMember: false });
+        }
+        return event.target.value.replace(/[//|/;&$%"<>()+{}',=~`!#^*/?]/g, '');
     };
 
     return (
@@ -302,6 +440,7 @@ const Settings = () => {
                         <Tab eventKey="systemSettings" title={key === 'systemSettings' ? <span style={{ color: '#ea97c4' }}><FiSettings size={20} />&nbsp; System </span> :
                             <span><FiSettings size={20} color={'#aeaeae'} />&nbsp; System </span>}>
                             <Formik
+                                validateOnChange
                                 enableReinitialize={true}
                                 initialValues={{
                                     dailyBudget: settingsData.dailyBudget || '',
@@ -309,6 +448,7 @@ const Settings = () => {
                                     monthlyBudget: settingsData.monthlyBudget || '',
                                     categories: settingsData.categories || '',
                                     newCategorie: '',
+                                    newMember: '',
                                     members: settingsData.members || '',
                                     currency: settingsData.currency || ''
                                 }}
@@ -318,14 +458,17 @@ const Settings = () => {
                                     monthlyBudget: Yup.number(),
                                     categories: Yup.string(),
                                     newCategorie: Yup.string(),
+                                    memebers: Yup.string()
+                                        .email('Email is invalid'),
+                                    newMember: Yup.string()
+                                        .email('Email is invalid'),
                                     currency: Yup.string()
                                         .required('Currency is required'),
                                 })}
                                 onSubmit={fields => {
-                                    console.log(fields);
-                                    // updateUser(fields);
+                                    updateSettings(fields);
                                 }}
-                                render={({ errors, values, touched, handleChange, setFieldValue, handleBlur, }) => (
+                                render={({ errors, values, touched, handleChange, setFieldValue, handleBlur, validateField }) => (
                                     <Form id="formContentSystemSettings">
                                         <div className="form-group row col-sm-12" style={{ paddingTop: '25px' }}>
                                             <div className="col-sm-4 ">
@@ -432,6 +575,39 @@ const Settings = () => {
                                                 <div className="p-2 settings-form">
                                                     <h4>Fammily settings</h4>
                                                 </div>
+                                                <div className="form-group row">
+                                                    <label className="col-sm-4" htmlFor="title">Add member</label>
+                                                    <div className="col-sm-6">
+                                                        <div className="form-group row">
+                                                            <input placeholder="Member email" name="newMember" onChange={e => { setFieldValue('newMember', emitChangesToMember(e)); }} value={values.newMember} className={'form-control col-sm-8 mr-1' + (err.newMember || err.emailValidation ? ' is-invalid' : '')} />
+                                                            <button type="button" onClick={e => {  setFieldValue('members', addMember(e, values.members, errors)); setFieldValue('newMember', clearMember(e)); }} value={values.newMember} className="col-sm-3 btn btn_main">Add</button>
+                                                            <ErrorMessage name="newMember" component="div" className="invalid-feedback" />
+                                                            {err.newMember ? <div className="invalid-feedback"> Memeber field can't be empty</div> : null}
+                                                            {err.emailValidation ? <div className="invalid-feedback">Email is invalid</div> : null}
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                {
+                                                    members.length ? <div className="form-group row">
+                                                        <label className="col-sm-4" htmlFor="title">All memebers</label>
+                                                        <div className="col-sm-8">
+                                                            <ul className="list-group col-sm-9">
+                                                                {
+                                                                    members.map((member) => (
+                                                                        <li className='row' key={member}>
+                                                                            <span className='list-group-item list-item col-sm-12'>{member}
+                                                                                <button className='btn card_removeButton' type='button' onClick={() => removeMember(member)}>
+                                                                                    <i><FaRegTimesCircle size={20} /></i>
+                                                                                </button>
+                                                                            </span>
+                                                                        </li>
+                                                                    ))
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div> : null
+                                                }
                                             </div>
                                         </div>
                                         <div className="form-group">
