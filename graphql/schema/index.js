@@ -27,6 +27,7 @@ type Expense {
   createdAt: String!
   updatedAt: String!
   creator: User!
+  creatorId: String!
 }
 
 type Income {
@@ -38,6 +39,7 @@ type Income {
   createdAt: String!
   updatedAt: String!
   creator: User!
+  creatorId: String!
 }
 
 type Category {
@@ -54,6 +56,7 @@ type Settings{
   members: String!
   currency: String!
   creator: User!
+  creatorId: String!
 }
 
 type User {

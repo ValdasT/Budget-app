@@ -5,14 +5,16 @@ import ExpensesContext from '../../../context/expenses-context';
 import './ExpensesList.css';
 
 const Expenselist = () => {
-    const { allExpenses } = useContext(ExpensesContext);
+    const { allExpenses, settings } = useContext(ExpensesContext);
 
     return (
         <Fragment>
             <AddExpense/>
             {
                 allExpenses.map((expense) => (
-                    <Expense className='expenses_list' key={expense._id} expense={expense} />
+                    settings.map((setting) => (
+                        expense.creatorId === setting.creatorId? <Expense className='expenses_list' key={expense._id} expense={expense} setting={setting} />: null
+                    ))
                 ))
             }
         </Fragment>

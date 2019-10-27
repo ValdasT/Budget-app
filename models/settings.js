@@ -27,6 +27,10 @@ const settingsSchema = new Schema({
         type: String,
         required: false
     },
+    creatorId: {
+        type: String,
+        required: true
+    },
     creator: {
         type: Schema.Types.ObjectId,
         ref: 'User'

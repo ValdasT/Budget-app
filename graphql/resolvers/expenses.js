@@ -60,7 +60,8 @@ module.exports = {
             group: args.expenseInput.group,
             createdAt: args.expenseInput.createdAt,
             updatedAt: args.expenseInput.updatedAt,
-            creator: req.userId
+            creator: req.userId,
+            creatorId: req.userId,
         });
         let createdExpense;
         try {

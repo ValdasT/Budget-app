@@ -7,21 +7,22 @@ import ConfirmationModal from '../../../Modal/confirmationModal';
 import { FaRegTimesCircle, FaRegEdit } from "react-icons/fa";
 import './Expense.css';
 
-const Expense = ({ expense }) => {
+const Expense = ({ expense, setting }) => {
 
     let [showInfoModal, setShowInfoModal] = useState(false);
     let [modalText, setModalText] = useState();
     let [doc, setDoc] = useState();
     let [showModal, setShowModal] = useState(false);
     let onUpdate = true;
-
+    let currencyValue = setting.currency === 'GBD' ? '£' : setting.currency === 'Dollar' ? '$' : '€';                                                           
+    
     const modalInfo = (show, text, id) => {
         setShowInfoModal(show);
         setModalText(text);
         setDoc(id);
     };
 
-    const { removeExpense, updateExpense, showMore } = useContext(ExpensesContext);
+    const { removeExpense, updateExpense, showMore} = useContext(ExpensesContext);
 
     const dateBeautify = (milliseconds) => {
         return moment(milliseconds, 'x').format('MM/DD/YYYY');
@@ -39,7 +40,7 @@ const Expense = ({ expense }) => {
     return (
         <ModalContext.Provider value={{ modalText, showInfoModal, setShowInfoModal, actionFunction, showModal, setShowModal, expense, onUpdate, submitExpense }}>
             <ConfirmationModal />
-            <AddExpenseModal />
+            <AddExpenseModal setting={setting}/>
             <span className={!showMore ? 'card' : 'card_more'}>
                 <div style={{ background: 'rgb(249, 248, 248)' }}>
                     <div className={!showMore ? 'card_title' : 'card_title_more'}> {expense.title}</div>
@@ -47,7 +48,7 @@ const Expense = ({ expense }) => {
                 <div className={'card_date'}>{dateBeautify(expense.createdAt)}</div>
                 <div className={!showMore ? 'card_group invisible' : 'card_group'}>Group: {expense.group}</div>
                 <div className={!showMore ? 'card_description invisible' : 'card_description'}>{expense.description}</div>
-                {expense.tag ==='Expense'? <div className='card_price_expense'>-{expense.price} € </div> : <div className='card_price_income'>{expense.price} € </div>}
+                {expense.tag ==='Expense'? <div className='card_price_expense'>-{expense.price} {currencyValue} </div> : <div className='card_price_income'>{expense.price} {currencyValue} </div>}
                 <button className='btn card_removeButton' onClick={() => modalInfo(true, 'Are you sure whant to delete this item?', expense)}>
                     <i><FaRegTimesCircle size={20} /></i>
                 </button>

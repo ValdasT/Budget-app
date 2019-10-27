@@ -90,6 +90,7 @@ module.exports = {
             categories: 'Other',
             members: args.settingsInput.members,
             creator: args.settingsInput.userId,
+            creatorId: args.settingsInput.userId,
             currency: 'Euro'
         });
         let createdSettings;

@@ -27,6 +27,10 @@ const incomeSchema = new Schema({
         type: String,
         required: true
     },
+    creatorId: {
+        type: String,
+        required: true
+    },
     creator: {
         type: Schema.Types.ObjectId,
         ref: 'User'

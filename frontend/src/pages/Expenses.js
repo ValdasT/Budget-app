@@ -22,6 +22,7 @@ const Expenses = () => {
     let [modalHeader, setModalHeader] = useState('');
     let [modalText, setModalText] = useState();
     let [showMore, setShowMore] = useState(false);
+    let [settings, setSettings] = useState([]);
 
     const modalInfo = (show, header, text) => {
         setShowInfoModal(show);
@@ -31,7 +32,52 @@ const Expenses = () => {
 
     useEffect(() => {
         getAll();
+        getSettingsData();
     }, []);
+
+    const getSettingsData = () => {
+        setIsLoading(true);
+        const requestBody = {
+            query: `
+              query {
+                settingsData {
+                    _id
+                    dailyBudget
+                    weeklyBudget
+                    monthlyBudget
+                    categories
+                    members
+                    currency
+                    creatorId
+                  }
+              }`
+        };
+        return fetch('/graphql', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + currentUser.token
+            }
+        })
+            .then(res => {
+                setIsLoading(false);
+                if (res.status !== 200 && res.status !== 201) {
+                    throw new Error('Failed!');
+                }
+                return res.json();
+            })
+            .then(resData => {
+                console.log(resData.data.settingsData[0]);
+                setSettings([...settings,resData.data.settingsData[0]]);
+            })
+            .catch(err => {
+                setIsLoading(false);
+                modalInfo(true, 'Error', err);
+                console.log(err);
+                return err;
+            });
+    };
 
     const removeExpense = expense => {
         let requestBody = {
@@ -111,6 +157,7 @@ const Expenses = () => {
                     group
                     createdAt
                     updatedAt
+                    creatorId
                   }
               }`
         };
@@ -156,6 +203,7 @@ const Expenses = () => {
                     group
                     createdAt
                     updatedAt
+                    creatorId
                   }
               }`
         };
@@ -200,6 +248,7 @@ const Expenses = () => {
                     group
                     createdAt
                     updatedAt
+                    creatorId
                 }
             }`,
             variables: {
@@ -251,6 +300,7 @@ const Expenses = () => {
                     group
                     createdAt
                     updatedAt
+                    creatorId
                 }
             }`,
             variables: {
@@ -307,6 +357,7 @@ const Expenses = () => {
                                 updatedAt
                                 description
                                 group
+                                creatorId
                               }
                           }
                         `,
@@ -331,6 +382,7 @@ const Expenses = () => {
                                 updatedAt
                                 description
                                 group
+                                creatorId
                               }
                           }
                         `,
@@ -402,6 +454,7 @@ const Expenses = () => {
                                 updatedAt
                                 description
                                 group
+                                creatorId
                               }
                           }
                         `,
@@ -426,6 +479,7 @@ const Expenses = () => {
                                 updatedAt
                                 description
                                 group
+                                creatorId
                               }
                           }
                         `,
@@ -492,6 +546,7 @@ const Expenses = () => {
                                 updatedAt
                                 description
                                 group
+                                creatorId
                               }
                           }
                         `,
@@ -517,6 +572,7 @@ const Expenses = () => {
                                 updatedAt
                                 description
                                 group
+                                creatorId
                               }
                           }
                         `,
@@ -633,8 +689,8 @@ const Expenses = () => {
     };
 
     return (
-        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading, getAllOnFilter, getAll, showMore, setShowMore, submitExpenseFromImport}}>
-            <ModalContext.Provider value={{ showInfoModal, setShowInfoModal, modalHeader, modalText, showModal, submitExpense, setShowModal, modalInfo, showImportModal, setShowIportModal}}>
+        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading, getAllOnFilter, getAll, showMore, setShowMore, submitExpenseFromImport, settings}}>
+            <ModalContext.Provider value={{ showInfoModal, setShowInfoModal, modalHeader, modalText, showModal, submitExpense, setShowModal, modalInfo, showImportModal, setShowIportModal }}>
                 <Filter />
                 <SmallStatistics />
                 {

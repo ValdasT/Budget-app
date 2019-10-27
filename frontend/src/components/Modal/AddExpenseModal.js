@@ -35,10 +35,22 @@ const validatePrice = (event) => {
     return price.replace(/[^\d.-]/g, '').replace('-', '');
 };
 
-const AddExpenseModal = () => {
-    const {submitExpense, showModal, setShowModal, expense, onUpdate } = useContext(ModalContext);
+const createCategoryList = setting => {
+    let categoriesList = [];
+    setting.categories.split(';').forEach(e => {
+        if (e.length) {
+            categoriesList.push(e);
+        }
+    });
+    return categoriesList;
+};
+
+const AddExpenseModal = ({ setting}) => {
+    const { submitExpense, showModal, setShowModal, expense, onUpdate } = useContext(ModalContext);
+    let currencyValue = setting.currency === 'GBD' ? '£' : setting.currency === 'Dollar' ? '$' : '€';  
     const handleClose = () => setShowModal(!showModal);
     let time = moment().format('MM/DD/YYYY');
+    let [categories, setCategories] = useState(createCategoryList(setting));
     const [selectedDate, setSelectedDate] = useState(new Date(expense ? dateBeautify(expense.createdAt) : time));
 
     return (
@@ -113,9 +125,11 @@ const AddExpenseModal = () => {
                                         <select name="group" onChange={handleChange}
                                             onBlur={handleBlur} value={values.group} className={'custom-select mr-sm-2 form-control' + (errors.group && touched.group ? ' is-invalid' : '')} id="inlineFormCustomSelect">
                                             <option value="">Select a group</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
+                                            {
+                                                categories.map((category) => (
+                                                    <option key={category} value={category}>{category}</option>
+                                                ))
+                                            }
                                         </select>
                                         <ErrorMessage name="group" component="div" className="invalid-feedback" />
                                     </div>
@@ -126,7 +140,7 @@ const AddExpenseModal = () => {
                                         <div className="input-group mb-2 mr-sm-2">
                                             <input placeholder="0.00" name="price" onChange={e => { setFieldValue('price', validatePrice(e)); }} value={values.price} className={'form-control' + (errors.price && touched.price ? ' is-invalid' : '')} />
                                             <div className="input-group-append">
-                                                <div className="input-group-text"><MdEuroSymbol className="" size={20} /></div>
+                                                <div style={{ fontSize: '15px' }} className="input-group-text">{currencyValue}</div>
                                             </div>
                                             <ErrorMessage name="price" component="div" className="invalid-feedback" />
                                         </div>
