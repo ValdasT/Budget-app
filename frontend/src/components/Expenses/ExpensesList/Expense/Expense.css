@@ -127,6 +127,14 @@
       color: #a90f0f !important;
       transition: all 0.4s ease 0s;
       }
+
+      .disabled{
+        color: darkGray !important;
+      }
+      .disabled:hover{
+        color: darkGray !important;
+        cursor: not-allowed;
+      }
     
     .card:hover {
     transform: scale(1.05, 1.05);

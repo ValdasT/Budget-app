@@ -1,6 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, Fragment } from 'react';
 import moment from 'moment';
 import ExpensesContext from '../../../../context/expenses-context';
+import AuthContext from '../../../../context/auth-context';
 import ModalContext from '../../../../context/modal-context';
 import AddExpenseModal from '../../../Modal/AddExpenseModal';
 import ConfirmationModal from '../../../Modal/confirmationModal';
@@ -9,6 +10,7 @@ import './Expense.css';
 
 const Expense = ({ expense, setting }) => {
 
+    let currentUser = AuthContext._currentValue;
     let [showInfoModal, setShowInfoModal] = useState(false);
     let [modalText, setModalText] = useState();
     let [doc, setDoc] = useState();
@@ -40,7 +42,7 @@ const Expense = ({ expense, setting }) => {
     return (
         <ModalContext.Provider value={{ modalText, showInfoModal, setShowInfoModal, actionFunction, showModal, setShowModal, expense, onUpdate, submitExpense }}>
             <ConfirmationModal />
-            <AddExpenseModal setting={setting}/>
+            <AddExpenseModal setting={setting} />
             <span className={!showMore ? 'card' : 'card_more'}>
                 <div style={{ background: 'rgb(249, 248, 248)' }}>
                     <div className={!showMore ? 'card_title' : 'card_title_more'}> {expense.title}</div>
@@ -48,13 +50,26 @@ const Expense = ({ expense, setting }) => {
                 <div className={'card_date'}>{dateBeautify(expense.createdAt)}</div>
                 <div className={!showMore ? 'card_group invisible' : 'card_group'}>Group: {expense.group}</div>
                 <div className={!showMore ? 'card_description invisible' : 'card_description'}>{expense.description}</div>
-                {expense.tag ==='Expense'? <div className='card_price_expense'>-{expense.price} {currencyValue} </div> : <div className='card_price_income'>{expense.price} {currencyValue} </div>}
-                <button className='btn card_removeButton' onClick={() => modalInfo(true, 'Are you sure whant to delete this item?', expense)}>
-                    <i><FaRegTimesCircle size={20} /></i>
-                </button>
-                <button className='btn card_editButton' onClick={() => setShowModal(!showModal)}>
-                    <i><FaRegEdit size={20} /></i>
-                </button>
+                {expense.tag === 'Expense' ? <div className='card_price_expense'>-{expense.price} {currencyValue} </div> : <div className='card_price_income'>{expense.price} {currencyValue} </div>}
+                {
+                    currentUser.userId === setting.creatorId ?
+                        <Fragment>
+                            <button className='btn card_removeButton' onClick={() => modalInfo(true, 'Are you sure whant to delete this item?', expense)}>
+                                <i><FaRegTimesCircle size={20} /></i>
+                            </button>
+                            <button className='btn card_editButton' onClick={() => setShowModal(!showModal)}>
+                                <i><FaRegEdit size={20} /></i>
+                            </button>
+                        </Fragment> :
+                        <Fragment>
+                            <button className='btn card_removeButton disabled' disabled onClick={() => modalInfo(true, 'Are you sure whant to delete this item?', expense)}>
+                                <i><FaRegTimesCircle size={20} /></i>
+                            </button>
+                            <button className='btn card_editButton disabled' disabled onClick={() => setShowModal(!showModal)}>
+                                <i><FaRegEdit size={20} /></i>
+                            </button>
+                        </Fragment>
+                }
             </span>
         </ModalContext.Provider>
     );

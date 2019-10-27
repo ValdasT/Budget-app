@@ -57,6 +57,7 @@ type Settings{
   currency: String!
   creator: User!
   creatorId: String!
+  creatorEmail: String!
 }
 
 type User {
@@ -131,6 +132,7 @@ input SettingsInput {
   members: String!
   currency: String!
   userId: String!
+  creatorEmail: String!
 }
 
 type RootQuery {

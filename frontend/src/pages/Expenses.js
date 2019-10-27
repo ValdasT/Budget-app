@@ -32,7 +32,6 @@ const Expenses = () => {
 
     useEffect(() => {
         getAll();
-        getSettingsData();
     }, []);
 
     const getSettingsData = () => {
@@ -49,6 +48,7 @@ const Expenses = () => {
                     members
                     currency
                     creatorId
+                    creatorEmail
                   }
               }`
         };
@@ -68,8 +68,9 @@ const Expenses = () => {
                 return res.json();
             })
             .then(resData => {
-                console.log(resData.data.settingsData[0]);
-                setSettings([...settings,resData.data.settingsData[0]]);
+                console.log(resData.data);
+                setSettings(...settings, resData.data.settingsData);
+                return resData.data.settingsData;
             })
             .catch(err => {
                 setIsLoading(false);
@@ -144,7 +145,7 @@ const Expenses = () => {
             });
     };
 
-    const getExpenseList = () => {
+    const getExpenseList = (users) => {
         setIsLoading(true);
         const requestBody = {
             query: `
@@ -159,7 +160,8 @@ const Expenses = () => {
                     updatedAt
                     creatorId
                   }
-              }`
+              }`,
+            allUsers: users
         };
         return fetch('/graphql', {
             method: 'POST',
@@ -190,7 +192,7 @@ const Expenses = () => {
             });
     };
 
-    const getIncomeList = () => {
+    const getIncomeList = (users) => {
         setIsLoading(true);
         const requestBody = {
             query: `
@@ -205,7 +207,8 @@ const Expenses = () => {
                     updatedAt
                     creatorId
                   }
-              }`
+              }`,
+            allUsers: users
         };
         return fetch('/graphql', {
             method: 'POST',
@@ -235,7 +238,7 @@ const Expenses = () => {
             });
     };
 
-    const onFilterExpenses = (values) => {
+    const onFilterExpenses = (values, allUsers) => {
         setIsLoading(true);
         const requestBody = {
             query: `
@@ -254,7 +257,8 @@ const Expenses = () => {
             variables: {
                 dateFrom: convertTimeToMs(values.dateFrom),
                 dateTo: convertTimeToMs(values.dateTo)
-            }
+            },
+            allUsers: allUsers
         };
         return fetch('/graphql', {
             method: 'POST',
@@ -287,7 +291,7 @@ const Expenses = () => {
             });
     };
 
-    const onFilterIncomes = (values) => {
+    const onFilterIncomes = (values, allUsers) => {
         setIsLoading(true);
         const requestBody = {
             query: `
@@ -306,7 +310,8 @@ const Expenses = () => {
             variables: {
                 dateFrom: convertTimeToMs(values.dateFrom),
                 dateTo: convertTimeToMs(values.dateTo)
-            }
+            },
+            allUsers: allUsers
         };
         return fetch('/graphql', {
             method: 'POST',
@@ -673,16 +678,30 @@ const Expenses = () => {
     };
 
     const getAll = async () => {
-        let expenses = await getExpenseList();
-        let incomes = await getIncomeList();
+        let allSettings = [];
+        if (!settings.length) {
+            allSettings = await getSettingsData();
+        } else {
+            allSettings = settings;
+        }
+        let allUsers = [];
+        allSettings.forEach(setting => {
+            allUsers.push(setting.creatorId);
+        });
+        let expenses = await getExpenseList(allUsers);
+        let incomes = await getIncomeList(allUsers);
         let all = expenses.concat(incomes);
         all = sortByDate(all);
         setAllExpenses(all);
     };
 
     const getAllOnFilter = async values => {
-        let expenses = await onFilterExpenses(values);
-        let incomes = await onFilterIncomes(values);
+        let allUsers = [];
+        settings.forEach(setting => {
+            allUsers.push(setting.creatorId);
+        });
+        let expenses = await onFilterExpenses(values, allUsers);
+        let incomes = await onFilterIncomes(values, allUsers);
         let all = expenses.concat(incomes);
         all = sortByDate(all);
         setAllExpenses(all);

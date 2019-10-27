@@ -91,6 +91,7 @@ module.exports = {
             members: args.settingsInput.members,
             creator: args.settingsInput.userId,
             creatorId: args.settingsInput.userId,
+            creatorEmail: args.settingsInput.creatorEmail,
             currency: 'Euro'
         });
         let createdSettings;
@@ -112,12 +113,32 @@ module.exports = {
         }
     },
     settingsData: async (args, req) => {
+        let otherMembers = [];
+        let allSettings = [];
         if (!req.isAuth) {
             throw new Error('Unauthenticated!');
         }
         try {
             const settings = await Settings.find({ creator: req.userId });
-            return settings;
+            allSettings.push(settings[0]);
+            if (settings[0].members.length) {
+                settings[0].members.split(';').forEach(e => {
+                    if (e.length) {
+                        otherMembers.push(e);
+                    }
+                });
+                for (let i = 0; i < otherMembers.length; i++) {
+                    let otherSetting = await Settings.find({ creatorEmail: otherMembers[i] });
+                    if (otherSetting.length && otherSetting[0].members.length) {
+                        otherSetting[0].members.split(';').forEach(user => {
+                            if (user.length && user === settings[0].creatorEmail) {
+                                allSettings.push(otherSetting[0]);
+                            }
+                        })
+                    }
+                }
+            }
+            return allSettings;
         } catch (err) {
             throw err;
         }

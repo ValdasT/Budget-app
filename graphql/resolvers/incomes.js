@@ -19,11 +19,15 @@ module.exports = {
     },
 
     incomes: async (args, req) => {
+        let newQuery = []
+        req.body.allUsers.forEach(userId => {
+                newQuery.push({'creator': userId})
+        })
         if (!req.isAuth) {
             throw new Error('Unauthenticated!');
         }
         try {
-            const incomes = await Income.find({ creator: req.userId });
+            const incomes = await Income.find({ $or: newQuery });
             return incomes.map(income => {
                 return transformIncome(income);
             });
@@ -33,13 +37,17 @@ module.exports = {
     },
 
     incomesFilter: async (args, req) => {
+        let newQuery = []
+        req.body.allUsers.forEach(userId => {
+                newQuery.push({'creator': userId})
+        })
         if (!req.isAuth) {
             throw new Error('Unauthenticated!');
         }
         try {
             const incomes = await Income.find({
-                creator: req.userId,
-                createdAt: {$gte: args.dateFrom, $lte:args.dateTo}
+                createdAt: { $gte: args.dateFrom, $lte: args.dateTo },
+                $or: newQuery 
             });
             return incomes.map(income => {
                 return transformIncome(income);

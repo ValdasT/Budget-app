@@ -113,7 +113,10 @@ const AuthPage = () => {
 
                     );
                 } else {
-                    let args = { userId: res.data.createUser._id };
+                    let args = {
+                        userId: res.data.createUser._id,
+                        creatorsEmail: res.data.createUser.email
+                    };
                     createSettings(args, values);
                 }
             })
@@ -127,8 +130,8 @@ const AuthPage = () => {
     const createSettings = (args, values) => {
         let requestBody = {
             query: `
-            mutation CreateSettings($dailyBudget: String!, $weeklyBudget: String!, $monthlyBudget: String!, $members: String!, $categories: String!,  $currency: String!, $userId: String! ) {
-                createSettings(settingsInput:{dailyBudget: $dailyBudget, weeklyBudget: $weeklyBudget, monthlyBudget: $monthlyBudget, members:$members, categories:$categories,currency:$currency, userId: $userId}) {
+            mutation CreateSettings($dailyBudget: String!, $weeklyBudget: String!, $monthlyBudget: String!, $members: String!, $categories: String!,  $currency: String!, $userId: String!, $creatorEmail: String! ) {
+                createSettings(settingsInput:{dailyBudget: $dailyBudget, weeklyBudget: $weeklyBudget, monthlyBudget: $monthlyBudget, members:$members, categories:$categories,currency:$currency, userId: $userId, creatorEmail: $creatorEmail}) {
                     _id
                    
                   }
@@ -142,6 +145,7 @@ const AuthPage = () => {
                 categories: '',
                 currency: '',
                 userId: args.userId,
+                creatorEmail: args.creatorsEmail
             }
         };
         fetch('/graphql', {

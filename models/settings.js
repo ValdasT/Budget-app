@@ -31,6 +31,10 @@ const settingsSchema = new Schema({
         type: String,
         required: true
     },
+    creatorEmail: {
+        type: String,
+        required: true
+    },
     creator: {
         type: Schema.Types.ObjectId,
         ref: 'User'
