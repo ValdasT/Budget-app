@@ -49,6 +49,7 @@ const Expense = ({ expense, setting }) => {
                 </div>
                 <div className={'card_date'}>{dateBeautify(expense.createdAt)}</div>
                 <div className={!showMore ? 'card_group invisible' : 'card_group'}>Group: {expense.group}</div>
+                <div className={!showMore ? 'card_group invisible' : 'card_group'}>Creator: {setting.creatorEmail}</div>
                 <div className={!showMore ? 'card_description invisible' : 'card_description'}>{expense.description}</div>
                 {expense.tag === 'Expense' ? <div className='card_price_expense'>-{expense.price} {currencyValue} </div> : <div className='card_price_income'>{expense.price} {currencyValue} </div>}
                 {

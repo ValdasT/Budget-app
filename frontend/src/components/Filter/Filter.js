@@ -20,47 +20,53 @@ const Filter = () => {
         return moment(pleaseformat).format('MM/DD/YYYY');
     };
 
-    const fastFilter = filter => {
+    const fastFilter = (filter, values) => {
         let date = {
             dateFrom: '',
-            dateTo: ''
+            dateTo: '',
+            tag: values
         };
         switch (filter) {
         case 'today':
             date = {
                 dateFrom: moment().format('MM/DD/YYYY'),
-                dateTo: moment().format('MM/DD/YYYY')
+                dateTo: moment().format('MM/DD/YYYY'),
+                tag: values
             };
             getAllOnFilter(date);
             break;
         case 'week':
             date = {
                 dateFrom: moment().startOf('week').format('MM/DD/YYYY'),
-                dateTo: moment().endOf('week').format('MM/DD/YYYY')
+                dateTo: moment().endOf('week').format('MM/DD/YYYY'),
+                tag: values
             };
             getAllOnFilter(date);
             break;
         case 'month':
             date = {
                 dateFrom: moment().startOf('month').format('MM/DD/YYYY'),
-                dateTo: moment().endOf('month').format('MM/DD/YYYY')
+                dateTo: moment().endOf('month').format('MM/DD/YYYY'),
+                tag: values
             };
             getAllOnFilter(date);
             break;
         case 'year':
             date = {
                 dateFrom: moment().startOf('year').format('MM/DD/YYYY'),
-                dateTo: moment().endOf('year').format('MM/DD/YYYY')
+                dateTo: moment().endOf('year').format('MM/DD/YYYY'),
+                tag: values
             };
             getAllOnFilter(date);
             break;
         case 'all':
-            getAll();
+            getAll(date.tag);
             break;
         default:
             date = {
                 dateFrom: moment().startOf('month').format('MM/DD/YYYY'),
-                dateTo: moment().endOf('month').format('MM/DD/YYYY')
+                dateTo: moment().endOf('month').format('MM/DD/YYYY'),
+                tag: values
             };
             getAllOnFilter(date);
         }
@@ -68,34 +74,72 @@ const Filter = () => {
 
     return (
         <Fragment>
-            <div className="form-group row col-sm-12  justify-content-center mb-3">
-                <button className=" col-sm-2 btn btn_with_line" onClick={() => fastFilter('today')}>Today</button>
-                <button className="col-sm-2 btn btn_with_line" onClick={() => fastFilter('week')}>This week</button>
-                <button className="col-sm-2 btn btn_with_line" onClick={() => fastFilter('month')}>This month</button>
-                <button className="col-sm-2 btn btn_with_line" onClick={() => fastFilter('year')}>This year</button>
-                <button className="col-sm-2 btn btn_with_line" onClick={() => fastFilter('all')}>All</button>
-            </div>
             <Formik
                 initialValues={{
                     dateFrom: fromTime,
-                    dateTo:  toTime,
+                    dateTo: toTime,
+                    tag: 'All'
                 }}
                 validationSchema={Yup.object().shape({
                     dateFrom: Yup.date()
                         .required('Date is required'),
                     dateTo: Yup.date()
-                        .required('Date is required')
+                        .required('Date is required'),
+                    tag: Yup.string()
                 })}
                 onSubmit={fields => {
                     getAllOnFilter(fields);
                 }}
 
-                render={({ errors, values, touched, setFieldValue }) => (
+                render={({ errors, values, touched, setFieldValue, handleChange, handleBlur }) => (
                     <Form>
+                        <div className="form-group row col-sm-12  justify-content-center mb-3">
+                            <button type='button' className=" col-sm-2 btn btn_with_line" onClick={() => {
+                                fastFilter('today', values.tag);
+                                setFieldValue('dateFrom', moment().format('MM/DD/YYYY'));
+                                setFieldValue('dateTo', moment().format('MM/DD/YYYY'));
+                                setStartDate(moment()._d);
+                                setEndDate(moment()._d);
+                            }}>Today</button>
+                            <button type='button' className="col-sm-2 btn btn_with_line" onClick={() => {
+                                fastFilter('week', values.tag);
+                                setFieldValue('dateFrom', moment().startOf('week').format('MM/DD/YYYY'));
+                                setFieldValue('dateTo', moment().endOf('week').format('MM/DD/YYYY'));
+                                setStartDate(moment().startOf('week')._d);
+                                setEndDate(moment().endOf('week')._d);
+                            }}>This week</button>
+                            <button type='button' className="col-sm-2 btn btn_with_line" onClick={() => {
+                                fastFilter('month', values.tag);
+                                setFieldValue('dateFrom', moment().startOf('month').format('MM/DD/YYYY'));
+                                setFieldValue('dateTo', moment().endOf('month').format('MM/DD/YYYY'));
+                                setStartDate(moment().startOf('month')._d);
+                                setEndDate(moment().endOf('month')._d);
+                            }}>This month</button>
+                            <button type='button' className="col-sm-2 btn btn_with_line" onClick={() => {
+                                fastFilter('year', values.tag);
+                                setFieldValue('dateFrom', moment().startOf('year').format('MM/DD/YYYY'));
+                                setFieldValue('dateTo', moment().endOf('year').format('MM/DD/YYYY'));
+                                setStartDate(moment().startOf('year')._d);
+                                setEndDate(moment().endOf('year')._d);
+                            }}>This year</button>
+                            <button type='button' className="col-sm-2 btn btn_with_line" onClick={() => fastFilter('all', values.tag)}>All</button>
+                        </div>
                         <div className="form-group row col-sm-12  justify-content-center mb-2">
-                            <label className=" col-form-label mr-3" htmlFor="dateFrom">From:</label>
+                            <div className="form-group row">
+                                <label className=" col-form-label" htmlFor="title">Type:</label>
+                                <div className="ml-3 mr-2">
+                                    <select name="tag" onChange={handleChange}
+                                        onBlur={handleBlur} value={values.tag} className={'custom-select mr-sm-2 form-control' + (errors.tag && touched.tag ? ' is-invalid' : '')} id="inlineFormCustomSelect">
+                                        <option value="All">All</option>
+                                        <option value="Expense">Expenses</option>
+                                        <option value="Income">Incomes</option>
+                                    </select>
+                                    <ErrorMessage name="tag" component="div" className="invalid-feedback" />
+                                </div>
+                            </div>
+                            <label className=" col-form-label ml-4" htmlFor="dateFrom">From:</label>
                             <div>
-                                <div className="input-group mb-2 mr-sm-2">
+                                <div className="input-group mb-2 mr-sm-2 ml-3 mr-3">
                                     <DatePicker
                                         selected={startDate}
                                         startDate={startDate}

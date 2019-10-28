@@ -677,34 +677,80 @@ const Expenses = () => {
         return newArray = sortByDate(newArray);
     };
 
-    const getAll = async () => {
-        let allSettings = [];
-        if (!settings.length) {
-            allSettings = await getSettingsData();
+    const getAll = async (values) => {
+        if (values == undefined || values === 'All') {
+            let allSettings = [];
+            if (!settings.length) {
+                allSettings = await getSettingsData();
+            } else {
+                allSettings = settings;
+            }
+            let allUsers = [];
+            allSettings.forEach(setting => {
+                allUsers.push(setting.creatorId);
+            });
+            let expenses = await getExpenseList(allUsers);
+            let incomes = await getIncomeList(allUsers);
+            let all = expenses.concat(incomes);
+            all = sortByDate(all);
+            setAllExpenses(all);
+        } else if (values === 'Expense') {
+            let allSettings = [];
+            if (!settings.length) {
+                allSettings = await getSettingsData();
+            } else {
+                allSettings = settings;
+            }
+            let allUsers = [];
+            allSettings.forEach(setting => {
+                allUsers.push(setting.creatorId);
+            });
+            let expenses = await getExpenseList(allUsers);
+            expenses = sortByDate(expenses);
+            setAllExpenses(expenses);
         } else {
-            allSettings = settings;
+            let allSettings = [];
+            if (!settings.length) {
+                allSettings = await getSettingsData();
+            } else {
+                allSettings = settings;
+            }
+            let allUsers = [];
+            allSettings.forEach(setting => {
+                allUsers.push(setting.creatorId);
+            });
+            let incomes = await getIncomeList(allUsers);
+            incomes = sortByDate(incomes);
+            setAllExpenses(incomes);
         }
-        let allUsers = [];
-        allSettings.forEach(setting => {
-            allUsers.push(setting.creatorId);
-        });
-        let expenses = await getExpenseList(allUsers);
-        let incomes = await getIncomeList(allUsers);
-        let all = expenses.concat(incomes);
-        all = sortByDate(all);
-        setAllExpenses(all);
     };
 
     const getAllOnFilter = async values => {
         let allUsers = [];
-        settings.forEach(setting => {
-            allUsers.push(setting.creatorId);
-        });
-        let expenses = await onFilterExpenses(values, allUsers);
-        let incomes = await onFilterIncomes(values, allUsers);
-        let all = expenses.concat(incomes);
-        all = sortByDate(all);
-        setAllExpenses(all);
+        if (values.tag === 'All') {
+            settings.forEach(setting => {
+                allUsers.push(setting.creatorId);
+            });
+            let expenses = await onFilterExpenses(values, allUsers);
+            let incomes = await onFilterIncomes(values, allUsers);
+            let all = expenses.concat(incomes);
+            all = sortByDate(all);
+            setAllExpenses(all);
+        } else if (values.tag === 'Expense') {
+            settings.forEach(setting => {
+                allUsers.push(setting.creatorId);
+            });
+            let expenses = await onFilterExpenses(values, allUsers);
+            expenses = sortByDate(expenses);
+            setAllExpenses(expenses);
+        } else {
+            settings.forEach(setting => {
+                allUsers.push(setting.creatorId);
+            });
+            let incomes = await onFilterIncomes(values, allUsers);
+            incomes = sortByDate(incomes);
+            setAllExpenses(incomes);
+        }
     };
 
     return (
