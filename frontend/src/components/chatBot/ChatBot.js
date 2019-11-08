@@ -1,15 +1,22 @@
-import React, { useEffect, useState } from "react";
-// import ChatBot from "react-simple-chatbot";
+import React, { useEffect, useState, useContext, Fragment } from "react";
+import ExpensesContext from '../../context/expenses-context';
+import AuthContext from '../../context/auth-context';
 import { Widget, addResponseMessage, toggleMsgLoader } from 'react-chat-widget';
 import './ChatBot.css';
 import logo from '../../pig-face.png';
 
 
 const CustomChatbot = () => {
+    if (currentUser && currentUser.token) {
+        const { settingsForBot, allExpensesForBot} = useContext(ExpensesContext); // need to fix this!
+    }
+    let currentUser = AuthContext._currentValue;
 
     useEffect(() => {
-        addResponseMessage("Init message!");
-    }, []);
+        if (currentUser.token) {
+            handleNewUserMessage("Hello");
+        }
+    }, [currentUser.token]);
 
     const handleNewUserMessage = (newMessage) => {
         toggleMsgLoader();
@@ -32,12 +39,17 @@ const CustomChatbot = () => {
             });
     };
 
-    return <Widget
-        handleNewUserMessage={handleNewUserMessage}
-        title="Budget Buddy"
-        subtitle=""
-        profileAvatar={logo}
-    />;
+    return (
+        <Fragment>
+            {currentUser.token ? < Widget
+                handleNewUserMessage={handleNewUserMessage}
+                title="Budget Buddy"
+                subtitle=""
+                profileAvatar={logo}
+            /> : null
+            }
+        </Fragment>
+    );
 };
 
 export { CustomChatbot as default };

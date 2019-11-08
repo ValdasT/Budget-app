@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import moment from 'moment';
+import AuthContext from '../context/auth-context';
 import ExpensesContext from '../context/expenses-context';
 import ModalContext from '../context/modal-context';
 import ExpenseList from '../components/Expenses/ExpensesList/ExpensesList';
@@ -9,9 +10,6 @@ import InfoModal from '../components/Modal/Modal';
 import ImportModal from '../components/Modal/ImportFileModal';
 import Spinner from '../components/Spinner/Spinner';
 import './Expenses.css';
-import ChatBot from '../components/chatBot/ChatBot';
-
-import AuthContext from '../context/auth-context';
 
 const Expenses = () => {
     let currentUser = AuthContext._currentValue;
@@ -24,6 +22,8 @@ const Expenses = () => {
     let [modalText, setModalText] = useState();
     let [showMore, setShowMore] = useState(false);
     let [settings, setSettings] = useState([]);
+    let [settingsForBot, setSettingsForBot] = useState([]);
+    let [allExpensesForBot, setAllExpensesForBot] = useState([]);
 
     const modalInfo = (show, header, text) => {
         setShowInfoModal(show);
@@ -131,14 +131,18 @@ const Expenses = () => {
             })
             .then(res => {
                 let newArray = [];
+                let newArrayForBot = [];
                 if (res.data.removeExpense) {
-                    newArray = updateArrayAfterRemove(res.data.removeExpense);
+                    newArray = updateArrayAfterRemove(res.data.removeExpense, allExpenses);
+                    newArrayForBot = updateArrayAfterRemove(res.data.removeExpense, allExpensesForBot);
                     modalInfo(true, 'Confirmation', 'Expense was deleted');
                 } else {
-                    newArray = updateArrayAfterRemove(res.data.removeIncome);
+                    newArray = updateArrayAfterRemove(res.data.removeIncome, allExpenses);
+                    newArrayForBot = updateArrayAfterRemove(res.data.removeIncome, allExpensesForBot);
                     modalInfo(true, 'Confirmation', 'Income was deleted');
                 }
                 setAllExpenses(newArray);
+                setAllExpensesForBot(newArrayForBot);
             })
             .catch(err => {
                 console.log(err);
@@ -428,10 +432,12 @@ const Expenses = () => {
                     modalInfo(true, 'Confirmation', 'Expense was created');
                     res.data.createExpense.tag = 'Expense';
                     setAllExpenses([...allExpenses, res.data.createExpense]);
+                    setAllExpensesForBot([...allExpensesForBot, res.data.createExpense]);
                 } else {
                     modalInfo(true, 'Confirmation', 'Income was created');
                     res.data.createIncome.tag = 'Income';
                     setAllExpenses([...allExpenses, res.data.createIncome]);
+                    setAllExpensesForBot([...allExpensesForBot,  res.data.createIncome]);
                 }
             })
             .catch(err => {
@@ -613,18 +619,21 @@ const Expenses = () => {
                     throw (res.errors[0].message);
                 }
                 let updatedAllList = [];
+                let updatedAllListForBot = [];
                 if (res.data.updateExpense) {
                     res.data.updateExpense.tag = 'Expense';
                     console.log(res.data.updateExpense);
-                    updatedAllList = updateArrayAfterUpdate(res.data.updateExpense);
+                    updatedAllList = updateArrayAfterUpdate(res.data.updateExpense, allExpenses);
                     modalInfo(true, 'Confirmation', 'Expense was updated');
                 } else {
                     res.data.updateIncome.tag = 'Income';
                     console.log(res.data.updateIncome);
-                    updatedAllList = updateArrayAfterUpdate(res.data.updateIncome);
+                    updatedAllListForBot = updateArrayAfterUpdate(res.data.updateIncome, allExpensesForBot);
+                    updatedAllListForBot = updateArrayAfterUpdate(res.data.updateIncome, allExpensesForBot);
                     modalInfo(true, 'Confirmation', 'Income was updated');
                 }
                 setAllExpenses(updatedAllList);
+                setAllExpensesForBot(updatedAllListForBot);
                 setIsLoading(false);
             })
             .catch(err => {
@@ -655,7 +664,7 @@ const Expenses = () => {
         return array;
     };
 
-    const updateArrayAfterUpdate = updateElement => {
+    const updateArrayAfterUpdate = (updateElement, allExpenses) => {
         let newArray = [];
         allExpenses.map(expense => {
             if (expense._id === updateElement._id) {
@@ -668,7 +677,7 @@ const Expenses = () => {
         return newArray = sortByDate(newArray);
     };
 
-    const updateArrayAfterRemove = updateElement => {
+    const updateArrayAfterRemove = (updateElement, allExpenses) => {
         let newArray = [];
         allExpenses.forEach(expense => {
             if (expense._id !== updateElement._id) {
@@ -695,6 +704,10 @@ const Expenses = () => {
             let all = expenses.concat(incomes);
             all = sortByDate(all);
             setAllExpenses(all);
+            if (!allExpensesForBot.length) {
+                setAllExpensesForBot(all);
+                setSettingsForBot(allSettings);
+            }
         } else if (values === 'Expense') {
             let allSettings = [];
             if (!settings.length) {
@@ -753,12 +766,10 @@ const Expenses = () => {
             setAllExpenses(incomes);
         }
     };
-
     return (
-        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading, getAllOnFilter, getAll, showMore, setShowMore, submitExpenseFromImport, settings}}>
+        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading, getAllOnFilter, getAll, showMore, setShowMore, submitExpenseFromImport, settings, settingsForBot, allExpensesForBot}}>
             <ModalContext.Provider value={{ showInfoModal, setShowInfoModal, modalHeader, modalText, showModal, submitExpense, setShowModal, modalInfo, showImportModal, setShowIportModal }}>
                 <Filter />
-                <ChatBot/>
                 <SmallStatistics />
                 {
                     isLoading ? <Spinner /> :

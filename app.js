@@ -45,6 +45,7 @@ app.get('/removeCookie', (req, res, next) => {
   let response = {}
   try {
     res.clearCookie('token');
+    res.clearCookie('sessionId');
     response = { message: 'Cookie monster ate your cookie!' };
   } catch (err) {
     console.log(err);
@@ -54,7 +55,7 @@ app.get('/removeCookie', (req, res, next) => {
 }); 
 
 app.post('/watson', async (req, res) => {
-    let response = await watson.getResponse(req);
+    let response = await watson.getResponse(req, res);
     res.json({ response, response });
   }); 
 
