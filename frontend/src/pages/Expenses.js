@@ -9,6 +9,7 @@ import InfoModal from '../components/Modal/Modal';
 import ImportModal from '../components/Modal/ImportFileModal';
 import Spinner from '../components/Spinner/Spinner';
 import './Expenses.css';
+import ChatBot from '../components/chatBot/ChatBot';
 
 import AuthContext from '../context/auth-context';
 
@@ -757,6 +758,7 @@ const Expenses = () => {
         <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading, getAllOnFilter, getAll, showMore, setShowMore, submitExpenseFromImport, settings}}>
             <ModalContext.Provider value={{ showInfoModal, setShowInfoModal, modalHeader, modalText, showModal, submitExpense, setShowModal, modalInfo, showImportModal, setShowIportModal }}>
                 <Filter />
+                <ChatBot/>
                 <SmallStatistics />
                 {
                     isLoading ? <Spinner /> :

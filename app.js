@@ -11,6 +11,7 @@ require('dotenv').config();
 const graphQlSchema = require('./graphql/schema/index');
 const graphQlResolvers = require('./graphql/resolvers/index');
 const isAuth = require('./middleware/is-auth');
+const watson = require('./middleware/watsonService');
 
 const app = express();
 
@@ -51,6 +52,11 @@ app.get('/removeCookie', (req, res, next) => {
   }
   res.json({ response, response });
 }); 
+
+app.post('/watson', async (req, res) => {
+    let response = await watson.getResponse(req);
+    res.json({ response, response });
+  }); 
 
 app.use(isAuth);
 
