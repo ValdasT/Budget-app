@@ -9,6 +9,7 @@ import SmallStatistics from '../components/SmallStatistics/SmallStatistics';
 import InfoModal from '../components/Modal/Modal';
 import ImportModal from '../components/Modal/ImportFileModal';
 import Spinner from '../components/Spinner/Spinner';
+import ChatBot from '../components/chatBot/ChatBot';
 import './Expenses.css';
 
 const Expenses = () => {
@@ -770,6 +771,7 @@ const Expenses = () => {
         <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading, getAllOnFilter, getAll, showMore, setShowMore, submitExpenseFromImport, settings, settingsForBot, allExpensesForBot}}>
             <ModalContext.Provider value={{ showInfoModal, setShowInfoModal, modalHeader, modalText, showModal, submitExpense, setShowModal, modalInfo, showImportModal, setShowIportModal }}>
                 <Filter />
+                <ChatBot />
                 <SmallStatistics />
                 {
                     isLoading ? <Spinner /> :

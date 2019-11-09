@@ -1,19 +1,18 @@
 import React, { useEffect, useState, useContext, Fragment } from "react";
 import ExpensesContext from '../../context/expenses-context';
 import AuthContext from '../../context/auth-context';
-import { Widget, addResponseMessage, toggleMsgLoader } from 'react-chat-widget';
+import { Widget, addResponseMessage, toggleMsgLoader, dropMessages } from 'react-chat-widget';
 import './ChatBot.css';
 import logo from '../../pig-face.png';
 
 
 const CustomChatbot = () => {
-    if (currentUser && currentUser.token) {
-        const { settingsForBot, allExpensesForBot} = useContext(ExpensesContext); // need to fix this!
-    }
+    const { settingsForBot, allExpensesForBot} = useContext(ExpensesContext);
     let currentUser = AuthContext._currentValue;
 
     useEffect(() => {
         if (currentUser.token) {
+            dropMessages();
             handleNewUserMessage("Hello");
         }
     }, [currentUser.token]);

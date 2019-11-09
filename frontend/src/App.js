@@ -11,7 +11,6 @@ import Expenses from './pages/Expenses';
 import Settings from './pages/Settings';
 import MainNavigation from './components/Navigation/MainNavigation';
 import AuthContext from './context/auth-context';
-import ChatBot from './components/chatBot/ChatBot';
 
 import './App.css';
 
@@ -83,7 +82,6 @@ class App extends Component {
                   {!this.state.token && <Redirect to="/auth" exact />}
                 </Switch>
               </main>
-              <ChatBot />
             </AuthContext.Provider>
           </Fragment>
         </BrowserRouter>
