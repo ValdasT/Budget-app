@@ -77,7 +77,7 @@ const Settings = () => {
                 setUserData(resData.data.userData[0]);
                 setEditableUserData(resData.data.userData[0]);
                 setIsLoading(false);
-                return resData.data.expenses;
+                return resData.data.userData[0];
 
             })
             .catch(err => {

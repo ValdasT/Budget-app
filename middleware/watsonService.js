@@ -26,7 +26,7 @@ let getResponse = (req, res) => {
                 }
             })
                 .then(res => {
-                    resolve(res.result.output.generic[0].text)
+                    resolve(res.result.output.generic)
                 })
                 .catch(err => {
                     console.log(err);

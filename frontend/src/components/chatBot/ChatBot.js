@@ -4,10 +4,11 @@ import AuthContext from '../../context/auth-context';
 import { Widget, addResponseMessage, toggleMsgLoader, dropMessages } from 'react-chat-widget';
 import './ChatBot.css';
 import logo from '../../pig-face.png';
+import {getAnswer} from './chatBotLogick';
 
 
 const CustomChatbot = () => {
-    const { settingsForBot, allExpensesForBot} = useContext(ExpensesContext);
+    const { settingsForBot, allExpensesForBot, user} = useContext(ExpensesContext);
     let currentUser = AuthContext._currentValue;
 
     useEffect(() => {
@@ -30,7 +31,10 @@ const CustomChatbot = () => {
         }).then(res => res.json())
             .then(data => {
                 toggleMsgLoader();
-                addResponseMessage(data.response);
+                data.response.forEach(response => {
+                    let answer = getAnswer(response.text, settingsForBot, allExpensesForBot, user );
+                    addResponseMessage(answer);
+                });
             })
             .catch(err => {
                 toggleMsgLoader();

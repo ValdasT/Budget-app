@@ -25,6 +25,7 @@ const Expenses = () => {
     let [settings, setSettings] = useState([]);
     let [settingsForBot, setSettingsForBot] = useState([]);
     let [allExpensesForBot, setAllExpensesForBot] = useState([]);
+    let [user, setUser] = useState({});
 
     const modalInfo = (show, header, text) => {
         setShowInfoModal(show);
@@ -625,11 +626,12 @@ const Expenses = () => {
                     res.data.updateExpense.tag = 'Expense';
                     console.log(res.data.updateExpense);
                     updatedAllList = updateArrayAfterUpdate(res.data.updateExpense, allExpenses);
+                    updatedAllListForBot = updateArrayAfterUpdate(res.data.updateExpense, allExpensesForBot);
                     modalInfo(true, 'Confirmation', 'Expense was updated');
                 } else {
                     res.data.updateIncome.tag = 'Income';
                     console.log(res.data.updateIncome);
-                    updatedAllListForBot = updateArrayAfterUpdate(res.data.updateIncome, allExpensesForBot);
+                    updatedAllList = updateArrayAfterUpdate(res.data.updateIncome, allExpenses);
                     updatedAllListForBot = updateArrayAfterUpdate(res.data.updateIncome, allExpensesForBot);
                     modalInfo(true, 'Confirmation', 'Income was updated');
                 }
@@ -642,6 +644,45 @@ const Expenses = () => {
                 console.log(err);
                 modalInfo(true, 'Error', err);
                 throw err;
+            });
+    };
+
+    const getUserData = () => {
+        const requestBody = {
+            query: `
+              query {
+                userData {
+                    _id
+                    email
+                    name
+                    surname
+                    createdAt
+                    updatedAt
+                  }
+              }`
+        };
+        return fetch('/graphql', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + currentUser.token
+            }
+        })
+            .then(res => {
+                setIsLoading(false);
+                if (res.status !== 200 && res.status !== 201) {
+                    throw new Error('Failed!');
+                }
+                return res.json();
+            })
+            .then(resData => {
+                return resData.data.userData[0];
+
+            })
+            .catch(err => {
+                console.log(err);
+                return err;
             });
     };
 
@@ -706,8 +747,10 @@ const Expenses = () => {
             all = sortByDate(all);
             setAllExpenses(all);
             if (!allExpensesForBot.length) {
+                let user = await getUserData();
                 setAllExpensesForBot(all);
                 setSettingsForBot(allSettings);
+                setUser(user);
             }
         } else if (values === 'Expense') {
             let allSettings = [];
@@ -768,10 +811,12 @@ const Expenses = () => {
         }
     };
     return (
-        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, updateExpense, isLoading, getAllOnFilter, getAll, showMore, setShowMore, submitExpenseFromImport, settings, settingsForBot, allExpensesForBot}}>
+        <ExpensesContext.Provider value={{ currentUser, allExpenses, setAllExpenses, removeExpense, isLoading, getAllOnFilter, getAll, showMore, setShowMore, submitExpenseFromImport, settings, settingsForBot, allExpensesForBot, user, updateExpense}}>
             <ModalContext.Provider value={{ showInfoModal, setShowInfoModal, modalHeader, modalText, showModal, submitExpense, setShowModal, modalInfo, showImportModal, setShowIportModal }}>
                 <Filter />
-                <ChatBot />
+                <Fragment>
+                    {user._id? <ChatBot />:null}
+                </Fragment>
                 <SmallStatistics />
                 {
                     isLoading ? <Spinner /> :

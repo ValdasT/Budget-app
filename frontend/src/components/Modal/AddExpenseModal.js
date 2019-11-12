@@ -6,7 +6,6 @@ import * as Yup from 'yup';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import { FaRegCalendarAlt } from 'react-icons/fa';
-import { MdEuroSymbol } from 'react-icons/md';
 
 
 import 'react-datepicker/dist/react-datepicker.css';
