@@ -1,6 +1,5 @@
 import moment from 'moment';
 
-
 export const getAnswer = (answer, settings, allExpenses, user) => {
     if (answer.includes('{NAME}')) {
         return answer.replace('{NAME}', user.name).replace('{SURNAME}', user.surname);
@@ -41,6 +40,7 @@ export const getAnswer = (answer, settings, allExpenses, user) => {
 };
 
 //==================================EXPENSES===============================
+
 const todaysExpenses = (answer, settings, allExpenses) => {
     let today = moment().format('YYYY-MM-DD');
     let todaysExpenses = 0;
@@ -52,7 +52,12 @@ const todaysExpenses = (answer, settings, allExpenses) => {
         }
     });
     todaysExpenses = todaysExpenses.toFixed(2);
-    return answer.replace('{DAY_EXPENSES}', todaysExpenses).replace('{CURRENCY}', getCurrency(settings[0]));
+    if (settings[0].dailyBudget.length) {
+        answer = answer.replace('{DAY_EXPENSES}', todaysExpenses).replace('{CURRENCY}', getCurrency(settings[0]));
+        return `${answer} and your daily budget is ${settings[0].dailyBudget} ${getCurrency(settings[0])}`;
+    } else {
+        return answer.replace('{DAY_EXPENSES}', todaysExpenses).replace('{CURRENCY}', getCurrency(settings[0]));
+    }
 };
 
 const yearsExpenses = (answer, settings, allExpenses) => {
@@ -82,8 +87,14 @@ const weeksExpenses = (answer, settings, allExpenses) => {
         }
     });
     weekExpenses = weekExpenses.toFixed(2);
-    return answer.replace('{WEEK_EXPENSES}', weekExpenses).replace('{CURRENCY}', getCurrency(settings[0]));
+    if (settings[0].weeklyBudget.length) {
+        answer = answer.replace('{WEEK_EXPENSES}', weekExpenses).replace('{CURRENCY}', getCurrency(settings[0]));
+        return `${answer} and your weekly budget is ${settings[0].weeklyBudget} ${getCurrency(settings[0])}`;
+    } else {
+        return answer.replace('{WEEK_EXPENSES}', weekExpenses).replace('{CURRENCY}', getCurrency(settings[0]));
+    }
 };
+
 const monthsExpenses = (answer, settings, allExpenses) => {
     let dateFrom = moment().startOf('month').format('YYYY-MM-DD');
     let dateTo = moment().endOf('month').format('YYYY-MM-DD');
@@ -96,7 +107,12 @@ const monthsExpenses = (answer, settings, allExpenses) => {
         }
     });
     monthExpenses = monthExpenses.toFixed(2);
-    return answer.replace('{MONTH_EXPENSES}', monthExpenses).replace('{CURRENCY}', getCurrency(settings[0]));
+    if (settings[0].monthlyBudget.length) {
+        answer = answer.replace('{MONTH_EXPENSES}', monthExpenses).replace('{CURRENCY}', getCurrency(settings[0]));
+        return `${answer} and your monthly budget is ${settings[0].monthlyBudget} ${getCurrency(settings[0])}`;
+    } else {
+        return answer.replace('{MONTH_EXPENSES}', monthExpenses).replace('{CURRENCY}', getCurrency(settings[0]));
+    }
 };
 
 //==================================INCOMES===============================
@@ -144,7 +160,8 @@ const weeksIncomes = (answer, settings, allExpenses) => {
     weekIncomes = weekIncomes.toFixed(2);
     return answer.replace('{WEEK_INCOME}', weekIncomes).replace('{CURRENCY}', getCurrency(settings[0]));
 };
-const monthsIncomes= (answer, settings, allExpenses) => {
+
+const monthsIncomes = (answer, settings, allExpenses) => {
     let dateFrom = moment().startOf('month').format('YYYY-MM-DD');
     let dateTo = moment().endOf('month').format('YYYY-MM-DD');
     let monthIncomes = 0;
@@ -159,10 +176,7 @@ const monthsIncomes= (answer, settings, allExpenses) => {
     return answer.replace('{MONTH_INCOME}', monthIncomes).replace('{CURRENCY}', getCurrency(settings[0]));
 };
 
-
-
-
-
+//==================================RECOMENDATION===============================
 
 const getCurrency = settings => {
     let currencyValue = settings.currency === 'GBD' ? '£' : settings.currency === 'Dollar' ? '$' : '€';
