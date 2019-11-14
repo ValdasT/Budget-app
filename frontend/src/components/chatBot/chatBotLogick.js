@@ -41,6 +41,10 @@ export const getAnswer = (answer, settings, allExpenses, user) => {
         answer = recomentdationForCategories(answer, settings, allExpenses);
         return answer;
     }
+    if (answer.includes('{CATEGORY_NAME}')) {
+        answer = recomentdationForCategories(answer, settings, allExpenses);
+        return answer;
+    }
     return answer;
 };
 
@@ -216,7 +220,11 @@ const recomentdationForCategories = (answer, settings, allExpenses) => {
             answerString += `• ${expense.groupName} - ${expense.amount} ${getCurrency(settings[0])}; `;
         }
     });
-    return answer.replace('{All_GROUPS}', answerString);
+    if (answer.includes('{CATEGORY_NAME}')) {
+        return `${answer.replace('{CATEGORY_NAME}', groupedExpenses[0].groupName)} - ${groupedExpenses[0].amount} ${getCurrency(settings[0])}.`;
+    } else {
+        return answer.replace('{All_GROUPS}', answerString);
+    }
 };
   
 const getCurrency = settings => {

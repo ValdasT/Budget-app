@@ -1,14 +1,14 @@
-.spinner {
+.cssload-loader {
 	position: relative;
-	left: calc(50% - 31px);
-	width: 62px;
-	height: 62px;
+	left: calc(50% - 52px);
+	width: 104px;
+	height: 104px;
 	border-radius: 50%;
 		-o-border-radius: 50%;
 		-ms-border-radius: 50%;
 		-webkit-border-radius: 50%;
 		-moz-border-radius: 50%;
-	perspective: 780px;
+	perspective: 1300px;
 }
 
 .cssload-inner {
@@ -35,7 +35,7 @@
 		-ms-animation: cssload-rotate-one 1.15s linear infinite;
 		-webkit-animation: cssload-rotate-one 1.15s linear infinite;
 		-moz-animation: cssload-rotate-one 1.15s linear infinite;
-	border-bottom: 3px solid rgb(150,32,150);
+	border-bottom: 5px solid rgb(194,119,160);
 }
 
 .cssload-inner.cssload-two {
@@ -46,7 +46,7 @@
 		-ms-animation: cssload-rotate-two 1.15s linear infinite;
 		-webkit-animation: cssload-rotate-two 1.15s linear infinite;
 		-moz-animation: cssload-rotate-two 1.15s linear infinite;
-	border-right: 3px solid rgb(117,17,117);
+	border-right: 5px solid rgb(234,151,197);
 }
 
 .cssload-inner.cssload-three {
@@ -57,7 +57,7 @@
 		-ms-animation: cssload-rotate-three 1.15s linear infinite;
 		-webkit-animation: cssload-rotate-three 1.15s linear infinite;
 		-moz-animation: cssload-rotate-three 1.15s linear infinite;
-	border-top: 3px solid rgb(204,78,204);
+	border-top: 5px solid rgb(240,201,223);
 }
 
 @keyframes cssload-rotate-one {

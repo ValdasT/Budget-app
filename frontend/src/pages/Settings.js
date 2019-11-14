@@ -574,7 +574,7 @@ const Settings = () => {
                                             </div>
                                             <div className="col-sm-4 ">
                                                 <div className="p-2 settings-form">
-                                                    <h4>Fammily settings</h4>
+                                                    <h4>Family settings</h4>
                                                 </div>
                                                 <div className="form-group row">
                                                     <label className="col-sm-4" htmlFor="title">Add member</label>
@@ -583,7 +583,7 @@ const Settings = () => {
                                                             <input placeholder="Member email" name="newMember" onChange={e => { setFieldValue('newMember', emitChangesToMember(e)); }} value={values.newMember} className={'form-control col-sm-8 mr-1' + (err.newMember || err.emailValidation ? ' is-invalid' : '')} />
                                                             <button type="button" onClick={e => {  setFieldValue('members', addMember(e, values.members, errors)); setFieldValue('newMember', clearMember(e)); }} value={values.newMember} className="col-sm-3 btn btn_main">Add</button>
                                                             <ErrorMessage name="newMember" component="div" className="invalid-feedback" />
-                                                            {err.newMember ? <div className="invalid-feedback"> Memeber field can't be empty</div> : null}
+                                                            {err.newMember ? <div className="invalid-feedback"> Member field can't be empty</div> : null}
                                                             {err.emailValidation ? <div className="invalid-feedback">Email is invalid</div> : null}
                                                         </div>
 
@@ -591,7 +591,7 @@ const Settings = () => {
                                                 </div>
                                                 {
                                                     members.length ? <div className="form-group row">
-                                                        <label className="col-sm-4" htmlFor="title">All memebers</label>
+                                                        <label className="col-sm-4" htmlFor="title">All members</label>
                                                         <div className="col-sm-8">
                                                             <ul className="list-group col-sm-9">
                                                                 {
