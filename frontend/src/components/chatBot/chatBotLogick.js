@@ -1,6 +1,7 @@
 import moment from 'moment';
 
 export const getAnswer = (answer, settings, allExpenses, user) => {
+    // recomentdationForCategories(answer, settings, allExpenses);
     if (answer.includes('{NAME}')) {
         return answer.replace('{NAME}', user.name).replace('{SURNAME}', user.surname);
     }
@@ -34,6 +35,10 @@ export const getAnswer = (answer, settings, allExpenses, user) => {
     }
     if (answer.includes('{MONTH_INCOME}')) {
         answer = monthsIncomes(answer, settings, allExpenses);
+        return answer;
+    }
+    if (answer.includes('{All_GROUPS}')) {
+        answer = recomentdationForCategories(answer, settings, allExpenses);
         return answer;
     }
     return answer;
@@ -178,6 +183,42 @@ const monthsIncomes = (answer, settings, allExpenses) => {
 
 //==================================RECOMENDATION===============================
 
+const recomentdationForCategories = (answer, settings, allExpenses) => {
+    let groupedExpenses = [];
+    allExpenses.forEach(expense => {
+        if (expense.tag === 'Expense') {
+            let found = false;
+            groupedExpenses.forEach(group => {
+                if (group.groupName === expense.group) {
+                    found = true;
+                    group.amount += parseFloat(expense.price);
+                }
+            });
+            if (!found) {
+                groupedExpenses.push({
+                    groupName: expense.group,
+                    amount: parseFloat(expense.price)
+                });
+            }  
+        }
+    });
+
+    groupedExpenses.forEach(expense => {
+        expense.amount = expense.amount.toFixed(2);
+    });
+
+    groupedExpenses = groupedExpenses.sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount) );
+    let answerString = '';
+    groupedExpenses.forEach((expense, i) => {
+        if (groupedExpenses.length === i+1) {
+            answerString += `• ${expense.groupName} - ${expense.amount} ${getCurrency(settings[0])}.`;
+        } else {
+            answerString += `• ${expense.groupName} - ${expense.amount} ${getCurrency(settings[0])}; `;
+        }
+    });
+    return answer.replace('{All_GROUPS}', answerString);
+};
+  
 const getCurrency = settings => {
     let currencyValue = settings.currency === 'GBD' ? '£' : settings.currency === 'Dollar' ? '$' : '€';
     return currencyValue;

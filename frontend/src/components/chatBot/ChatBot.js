@@ -4,7 +4,7 @@ import AuthContext from '../../context/auth-context';
 import { Widget, addResponseMessage, toggleMsgLoader, dropMessages } from 'react-chat-widget';
 import './ChatBot.css';
 import logo from '../../pig-face.png';
-import {getAnswer} from './chatBotLogick';
+import { getAnswer } from './chatBotLogick';
 
 
 const CustomChatbot = () => {
@@ -32,7 +32,7 @@ const CustomChatbot = () => {
             .then(data => {
                 toggleMsgLoader();
                 data.response.forEach(response => {
-                    let answer = getAnswer(response.text, settingsForBot, allExpensesForBot, user );
+                    let answer = getAnswer(response.text, settingsForBot, allExpensesForBot, user);
                     addResponseMessage(answer);
                 });
             })
