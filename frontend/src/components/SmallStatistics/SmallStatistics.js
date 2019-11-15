@@ -10,6 +10,8 @@ const SmallStatistics = () => {
     let [budget, setBudget] = useState(true);
     let [income, setIncome] = useState(true);
     let [expense, setExpense] = useState(true);
+    let [maxValue, setMaxValue] = useState('auto');
+    let [minValue, setminValue] = useState('auto');
     let minAndMax = { first: [] };
 
     const prepareChartData = allExpenses => {
@@ -50,6 +52,8 @@ const SmallStatistics = () => {
         minAndMax.first.push(Math.max.apply(Math, allData.map((expense) => { return expense.Expenses; })));
         minAndMax.smallest = Math.min.apply(Math, minAndMax.first.map((expense) => { return expense; }));
         minAndMax.biggest = Math.max.apply(Math, minAndMax.first.map((expense) => { return expense; }));
+        setMaxValue(minAndMax.biggest);
+        setminValue(minAndMax.smallest);
         setInitData(allData);
     };
 
@@ -111,7 +115,7 @@ const SmallStatistics = () => {
                     />
                     <YAxis
                         type="number"
-                        domain={[minAndMax.smallest, minAndMax.biggest]}
+                        domain={[minValue, maxValue]}
                         allowDataOverflow
                         fontSize='10'
                     />
