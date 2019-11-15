@@ -1,22 +1,6 @@
 const { buildSchema } = require('graphql');
 
 module.exports = buildSchema(`
-type Booking {
-    _id: ID!
-    event: Event!
-    user: User!
-    createdAt: String!
-    updatedAt: String!
-}
-
-type Event {
-  _id: ID!
-  title: String!
-  description: String!
-  price: Float!
-  date: String!
-  creator: User!
-}
 
 type Expense {
   _id: ID!
@@ -69,7 +53,6 @@ type User {
   createdAt: String!
   updatedAt: String!
   userSettings: [Settings!]
-  createdEvents: [Event!]
   createdExpenses: [Expense!]
   createdIncomes: [Income!]
 }
@@ -83,13 +66,6 @@ type File {
   _id: ID!
   title: String!
   description: String!
-}
-
-input EventInput {
-  title: String!
-  description: String!
-  price: Float!
-  date: String!
 }
 
 input UserInput {
@@ -137,8 +113,6 @@ input SettingsInput {
 
 type RootQuery {
     allFiles: [File!]!
-    events: [Event!]!
-    bookings: [Booking!]!
     login(email: String!, password: String!): AuthData!
 
     expenses: [Expense!]!
@@ -165,15 +139,11 @@ type RootMutation {
     removeIncome (incomeId: ID!): Income!
     updateIncome (incomeId: ID!, incomeInput: IncomeInput): Income!
 
-    createEvent (eventInput: EventInput): Event
     createUser (userInput: UserInput): User
     updateUser (userId: ID!, name: String!, surname: String!, email: String!, updatedAt: String!): User!
 
     createSettings (settingsInput: SettingsInput): Settings
     updateSettings (settingsId: ID!, dailyBudget: String!, weeklyBudget: String!, monthlyBudget: String!, categories: String!, members: String!, currency: String!): Settings!
-
-    bookEvent (eventId: ID!): Booking!
-    cancelBooking (bookingId: ID!): Event!
 }
 
 schema {

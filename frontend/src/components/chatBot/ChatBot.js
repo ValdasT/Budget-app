@@ -14,7 +14,7 @@ const CustomChatbot = () => {
     useEffect(() => {
         if (currentUser.token) {
             dropMessages();
-            handleNewUserMessage("Hello");
+            handleNewUserMessage('Hello');
         }
     }, [currentUser.token]);
 

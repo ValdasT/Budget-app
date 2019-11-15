@@ -4,8 +4,6 @@ import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 
 import AuthPage from './pages/Auth';
-import BookingsPage from './pages/Bookings';
-import EventsPage from './pages/Events';
 import TestPage from './pages/Test';
 import Expenses from './pages/Expenses';
 import Settings from './pages/Settings';
@@ -71,10 +69,6 @@ class App extends Component {
                   {this.state.token && <Redirect from="/" to="/expenses" exact />}
                   {this.state.token && (
                     <Redirect from="/auth" to="/expenses" exact />
-                  )}
-                  <Route path="/events" component={EventsPage} />
-                  {this.state.token && (
-                    <Route path="/bookings" component={BookingsPage} />
                   )}
                   {this.state.token && (
                     <Route path="/settings" component={Settings} />

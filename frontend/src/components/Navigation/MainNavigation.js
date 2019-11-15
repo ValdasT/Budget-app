@@ -38,10 +38,7 @@ const mainNavigation = () => (
                                 <NavDropdown alignRight title={
                                     <span><GiHamburgerMenu size={25} /></span>
                                 } id="collasible-nav-dropdown">
-                                    {/* <NavDropdown.Item as={Link} to="/events">Events</NavDropdown.Item>
-                                    <NavDropdown.Item as={Link} to="/bookings">Bookings</NavDropdown.Item> */}
                                     <NavDropdown.Item as={Link} to="/expenses">Expenses</NavDropdown.Item>
-                                    {/* <NavDropdown.Item as={Link} to="/incomes">Incomes</NavDropdown.Item> */}
                                     <NavDropdown.Item as={Link} to="/statistics">Statistics</NavDropdown.Item>
                                 </NavDropdown>
                             )}
