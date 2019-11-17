@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { Navbar, Nav, NavDropdown} from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { GiHamburgerMenu, GiPiggyBank } from "react-icons/gi";
 import { FaUser } from "react-icons/fa";
 
