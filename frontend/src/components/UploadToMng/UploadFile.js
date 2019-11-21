@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback, Fragment } from 'react';
+import React, { useState, useCallback, Fragment } from 'react';
 import Spinner from '../Spinner/Spinner';
 import InfoModal from '../Modal/Modal';
 import ModalContext from '../../context/modal-context';
@@ -17,7 +17,6 @@ const UploadFile = () => {
     let [modalHeader, setModalHeader] = useState('');
     let [modalText, setModalText] = useState();
     let [showInfoModal, setShowInfoModal] = useState(false);
-    let [image, setImage] = useState('');
 
     const modalInfo = (show, header, text) => {
         setShowInfoModal(show);

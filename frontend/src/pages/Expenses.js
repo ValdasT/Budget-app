@@ -730,7 +730,7 @@ const Expenses = () => {
     };
 
     const getAll = async (values) => {
-        if (values == undefined || values === 'All') {
+        if (values === undefined || values === 'All') {
             let allSettings = [];
             if (!settings.length) {
                 allSettings = await getSettingsData();

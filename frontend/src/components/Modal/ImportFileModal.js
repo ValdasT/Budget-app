@@ -5,9 +5,11 @@ import Spinner from '../Spinner/Spinner';
 import { useDropzone } from 'react-dropzone';
 import Papa from 'papaparse';
 import XLSX from 'xlsx';
-import { FiUpload } from "react-icons/fi";
 import { Modal, Button } from 'react-bootstrap';
-import { FiDelete } from "react-icons/fi";
+import { FiDelete, FiUpload } from "react-icons/fi";
+import { FaFileExcel } from "react-icons/fa";
+import FileSaver from 'file-saver';
+import axios from 'axios';
 
 import './Modal.css';
 
@@ -172,6 +174,23 @@ const ImportModal = () => {
         }
     };
 
+    const downloadFileFromDb = (name) => {
+        axios({
+            method: "GET",
+            url: `/file/${name}`,
+            responseType: "blob",
+        })
+            .then(response => {
+                console.log(response);
+                FileSaver.saveAs(response.data, `example.xlsx`);
+            })
+            .then(() => {
+                console.log("Completed");
+            }).catch(error => {
+                console.log(error)
+            });
+    };
+
     const maxSize = 50173280;
 
     const onDrop = useCallback(acceptedFiles => {
@@ -233,6 +252,11 @@ const ImportModal = () => {
                                             </div>
                                         )}
                                     </div>
+                                </div>
+                                <div className="mt-2">
+                                    <a onClick={() => { downloadFileFromDb(`5df002023ee4ea3ba7a44370fd093668.xlsx`) }} style={{ cursor: 'pointer' }}>
+                                        <i><FaFileExcel size={20} color={"grey"} /></i> - Download template file.
+                                    </a>
                                 </div>
                             </Modal.Body>
                         </Fragment> : <Spinner />

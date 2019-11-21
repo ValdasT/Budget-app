@@ -202,7 +202,7 @@ const Settings = () => {
         let allCategories = '';
 
         categories.forEach((category, i) => {
-            if (categories.length != i + 1) {
+            if (categories.length !== i + 1) {
                 allCategories += `${category};`;
             } else {
                 allCategories += category;
@@ -210,7 +210,7 @@ const Settings = () => {
         });
         if (members.length) {
             members.forEach((member, i) => {
-                if (members.length != i + 1) {
+                if (members.length !== i + 1) {
                     allMemebers += `${member};`;
                 } else {
                     allMemebers += member;

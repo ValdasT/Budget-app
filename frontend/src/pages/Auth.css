@@ -13,6 +13,7 @@
 }
 
 #formContentSignIn {
+  margin-top: 10%;
   border-radius: 10px 10px 10px 10px;
   background: #fff;
   padding: 30px;
@@ -25,6 +26,7 @@
 }
 
 #formContentSignUp {
+  margin-top: 5%;
   border-radius: 10px 10px 10px 10px;
   background: #fff;
   padding: 30px;
