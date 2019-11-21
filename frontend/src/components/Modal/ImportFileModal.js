@@ -42,7 +42,7 @@ const ImportModal = () => {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     let bstr = e.target.result;
-                    let wb = XLSX.read(bstr, { type: 'binary', header: 1, cellDates: true, dateNF: 'DD/MM/YYYY' });
+                    let wb = XLSX.read(bstr, { type: 'binary', header: 1, cellDates: true, dateNF: 'MM/DD/YYYY' });
                     let wsname = wb.SheetNames[0];
                     let ws = wb.Sheets[wsname];
                     let csv = XLSX.utils.sheet_to_csv(ws, { header: 1, raw: false });
@@ -104,6 +104,7 @@ const ImportModal = () => {
                 });
             }
         });
+        console.log(preparedToDb);
         let newFromDb = [];
         preparedToDb.forEach(async e => {
             newFromDb.push(await submitExpenseFromImport(e));
@@ -254,7 +255,7 @@ const ImportModal = () => {
                                     </div>
                                 </div>
                                 <div className="mt-2">
-                                    <a onClick={() => { downloadFileFromDb(`5df002023ee4ea3ba7a44370fd093668.xlsx`) }} style={{ cursor: 'pointer' }}>
+                                    <a onClick={() => { downloadFileFromDb(`9d51495ee31655607488187b3b3f4b14.xlsx`) }} style={{ cursor: 'pointer' }}>
                                         <i><FaFileExcel size={20} color={"grey"} /></i> - Download template file.
                                     </a>
                                 </div>
