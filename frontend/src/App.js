@@ -4,6 +4,7 @@ import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 
 import AuthPage from './pages/Auth';
+import UploadFile from './components/UploadToMng/UploadFile';
 import TestPage from './pages/Test';
 import Expenses from './pages/Expenses';
 import Settings from './pages/Settings';
@@ -59,6 +60,7 @@ class App extends Component {
             >
               <MainNavigation />
               <Switch>
+                <Route path="/uploadfiles" component={UploadFile} />
                 <Route path="/test" component={TestPage} />
                 {!this.state.token && (<Route path="/auth" component={AuthPage} />)}
                 {!this.state.token && <Redirect to="/auth" exact />}

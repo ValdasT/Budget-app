@@ -1,0 +1,99 @@
+.react-datepicker-wrapper, .react-datepicker__input-container {
+    display: block !important;
+  }
+  
+  .input-group-append{
+    width:auto;
+    max-width: 17%;
+  }
+
+  .button_Upload {
+    margin-top: 15px;
+    width: 100%; 
+  }
+
+  .dropBox {
+    margin-top: 10%;
+    border-radius: 10px 10px 10px 10px;
+    background: #fff;
+    padding: 30px;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+  
+  .react-datepicker-wrapper {
+    width:83%;
+  }
+  
+  .not-round-right-corner{
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  .modal-backdrop {
+    z-index: 0;
+  }
+  
+  .drop_zone{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-width: 2px;
+    border-radius: 2px;
+    border-color: #eeeeee;
+    border-style: dashed;
+    background-color: #fafafa;
+    color: #bdbdbd;
+    outline: none;
+    transition: border .24s ease-in-out;
+  }
+  
+  .drop_zone:hover{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-width: 2px;
+    border-radius: 2px;
+    border-color: #ea97c4;;
+    border-style: dashed;
+    background-color: #fafafa;
+    color: #ea97c4;;
+    outline: none;
+    transition: border .24s ease-in-out;
+  }
+  
+  .btn_remove {
+    background: #ffffff;
+    margin: 3px;
+    overflow: hidden;
+    outline: none;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    border: 0px;
+    transition: all 0.6s ease;
+    -ms-transition: all 0.6s ease;
+    -webkit-transition: all 0.6s ease;
+    -moz-transition: all 0.6s ease;
+    -o-transition: all 0.6s ease;
+  }
+  
+  .btn_remove:hover {
+    background: #ffffff;
+    color: #ea97c4;
+    transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -o-transform: scale(1.1);
+  }
+  
+    
+  
