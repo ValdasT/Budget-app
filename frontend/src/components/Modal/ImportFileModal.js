@@ -104,7 +104,6 @@ const ImportModal = () => {
                 });
             }
         });
-        console.log(preparedToDb);
         let newFromDb = [];
         preparedToDb.forEach(async e => {
             newFromDb.push(await submitExpenseFromImport(e));
