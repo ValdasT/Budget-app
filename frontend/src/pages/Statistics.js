@@ -2,10 +2,12 @@ import React, { useEffect, useState, Fragment } from 'react';
 import Filter from '../components/Filter/FilterForStatistics';
 import AuthContext from '../context/auth-context';
 import Spinner from '../components/Spinner/Spinner';
-// import moment from 'moment';
-import { onFilterExpenses, onFilterIncomes, getSettingsData, getExpenseList, getIncomeList, getUserData, sortByDate } from './ApiCalls';
+import moment from 'moment';
+import { onFilterExpenses, onFilterIncomes, getSettingsData, getExpenseList, getIncomeList, getUserData, sortByDate, getCurrency } from './ApiCalls';
 import StatisticsContext from '../context/statistics-context';
-import ExpensesAndIncomes from '../components/StatisticsCharts/ExpensesAndIncomes'
+import ExpensesAndIncomes from '../components/StatisticsCharts/ExpensesAndIncomes';
+import ExpensesByCategory from '../components/StatisticsCharts/ExpensesByCategory';
+import IncomesByCategory from '../components/StatisticsCharts/IncomesByCategories';
 import './Statistics.css';
 
 const Statistics = () => {
@@ -18,8 +20,14 @@ const Statistics = () => {
     let [allExpensesForBot, setAllExpensesForBot] = useState([]);
     let [user, setUser] = useState({});
 
+    let [totalExpenses, setTotalExpenses] = useState({});
+
     useEffect(() => {
-        getAll();
+        let date = {
+            dateFrom: moment().startOf('month').format('MM/DD/YYYY'),
+            dateTo: moment().endOf('month').format('MM/DD/YYYY')
+        };
+        getAllOnFilter(date);
     }, []);
 
     const getAll = async () => {
@@ -54,6 +62,7 @@ const Statistics = () => {
         let allSettings = [];
         if (!settings.length) {
             allSettings = await getSettingsData(currentUser);
+            setSettings(allSettings);
         } else {
             allSettings = settings;
         };
@@ -67,37 +76,53 @@ const Statistics = () => {
         all = sortByDate(all);
         setAllExpenses(all);
         setIsLoading(false);
+        if (!allExpensesForBot.length) {
+            let user = await getUserData(currentUser);
+            setAllExpensesForBot(all);
+            setSettingsForBot(allSettings);
+            setUser(user)
+        };
     };
 
 
     return (
-        <StatisticsContext.Provider value={{ getAllOnFilter, getAll, allExpenses }}>
+        <StatisticsContext.Provider value={{ getAllOnFilter, getAll, allExpenses, totalExpenses, setTotalExpenses }}>
             <Fragment>
                 <Filter />
                 {
                     isLoading ? <Spinner /> :
-                        <div className='statistics-board'>
-                            <div className="statistics-card">
-                                <p className='statistics-text'>This is pieCart test test est e </p>
-                                <ExpensesAndIncomes />
+                        allExpenses.length ?
+                            <div className='statistics-board'>
+                                <div className="statistics-card">
+                                    <p className='statistics-text'>
+                                        <li>Total expenses: {totalExpenses.expenses}&nbsp;{getCurrency(settings[0])}</li>
+                                        <li>Total incomes: {totalExpenses.incomes}&nbsp;{getCurrency(settings[0])}</li>
+                                        <li>Total budget: {totalExpenses.budget}&nbsp;{getCurrency(settings[0])}</li>
+                                    </p>
+                                    <ExpensesAndIncomes />
+                                </div>
+                                <div className="statistics-card">
+                                    <p className='statistics-text'>Expenses by categories: </p>
+                                    <ExpensesByCategory />
+                                </div>
+                                <div className="statistics-card">
+                                    <p className='statistics-text'>Incomes by categories:</p>
+                                    <IncomesByCategory />
+                                </div>
+                                <div className="statistics-card">
+                                    <p className='statistics-text'>This is pieCart test test est e </p>
+                                    <ExpensesAndIncomes />
+                                </div>
+                                <div className="statistics-card">
+                                    <p className='statistics-text'>This is pieCart test test est e </p>
+                                    <ExpensesAndIncomes />
+                                </div>
+                            </div> :
+                            <div className='warning-box' style={{marginTop: "5%"}}>
+                                <div className="alert alert-danger" style={{marginBottom: "0px"}}role="alert">
+                                    There are no data.
+                                 </div>
                             </div>
-                            <div className="statistics-card">
-                                <p className='statistics-text'>This is pieCart test test est e sd asd asd asd asda sda sd as das d as das d asd </p>
-                                <ExpensesAndIncomes />
-                            </div>
-                            <div className="statistics-card">
-                                <p className='statistics-text'>This is pieCart test test est e </p>
-                                <ExpensesAndIncomes />
-                            </div>
-                            <div className="statistics-card">
-                                <p className='statistics-text'>This is pieCart test test est e </p>
-                                <ExpensesAndIncomes />
-                            </div>
-                            <div className="statistics-card">
-                                <p className='statistics-text'>This is pieCart test test est e </p>
-                                <ExpensesAndIncomes />
-                            </div>
-                        </div>
                 }
             </Fragment>
         </StatisticsContext.Provider>

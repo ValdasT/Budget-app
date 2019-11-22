@@ -279,3 +279,8 @@ const addTag = (array, tag) => {
     });
     return array;
 };
+
+export const getCurrency = settings => {
+    let currencyValue = settings.currency === 'GBD' ? '£' : settings.currency === 'Dollar' ? '$' : '€';
+    return currencyValue;
+};

@@ -76,7 +76,7 @@ const AddExpenseModal = ({ setting}) => {
                                 .required('title is required'),
                             description: Yup.string(),
                             group: Yup.string()
-                                .required('Group is required'),
+                                .required('Category is required'),
                             tag: Yup.string()
                                 .required('Type is required'),
                             price: Yup.number()
@@ -123,7 +123,7 @@ const AddExpenseModal = ({ setting}) => {
                                     <div className="col-sm-9">
                                         <select name="group" onChange={handleChange}
                                             onBlur={handleBlur} value={values.group} className={'custom-select mr-sm-2 form-control' + (errors.group && touched.group ? ' is-invalid' : '')} id="inlineFormCustomSelect">
-                                            <option value="">Select a group</option>
+                                            <option value="">Select a category</option>
                                             {
                                                 categories.map((category) => (
                                                     <option key={category} value={category}>{category}</option>

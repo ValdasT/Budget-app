@@ -3,32 +3,35 @@ import StatisticsContext from '../../context/statistics-context';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
 const ExpensesAndIncomes = () => {
-    const { allExpenses } = useContext(StatisticsContext);
-    let [initData, setInitData] = useState({});
+    const { allExpenses, totalExpenses, setTotalExpenses } = useContext(StatisticsContext);
     useEffect(() => {
         prepareChartData(allExpenses);
-    }, [prepareChartData]);
+    }, [allExpenses]);
 
     let prepareChartData = allExpenses => {
         let data = {
             expenses: 0,
-            incomes: 0
+            incomes: 0,
+            budget: 0
         }
         allExpenses.forEach(element => {
             if (element.tag === 'Expense') {
                 data.expenses += parseFloat(element.price);
-            } else {
+            } else if((element.tag === 'Income')) {
                 data.incomes += parseFloat(element.price);
             }
         });
         data.expenses = parseFloat(data.expenses.toFixed(2));
         data.incomes = parseFloat(data.incomes.toFixed(2));
-        setInitData(data);
+        data.budget -= data.expenses;
+        data.budget += data.incomes;
+        data.budget = parseFloat(data.budget.toFixed(2));
+        setTotalExpenses(data);
     };
 
     const data = [
-        { name: 'Expenses', value: initData.expenses },
-        { name: 'Incomes', value: initData.incomes },
+        { name: 'Expenses', value: totalExpenses.expenses },
+        { name: 'Incomes', value: totalExpenses.incomes },
     ];
 
     const RADIAN = Math.PI / 180;
