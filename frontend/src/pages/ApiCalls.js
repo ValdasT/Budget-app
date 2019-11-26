@@ -269,6 +269,15 @@ export const sortByDate = arrayWithDate => {
     return arrayWithDate;
 };
 
+export const getFirstAndLastExpenseDate = arrayWithDate => {
+    let size = arrayWithDate.length - 1;
+    let date = {
+        dateFrom: moment(arrayWithDate[0].createdAt, 'x').format('MM/DD/YYYY'),
+        dateTo: moment(arrayWithDate[size].createdAt, 'x').format('MM/DD/YYYY')
+    };
+    return { dateFrom: date.dateFrom, dateTo: date.dateTo };
+};
+
 const convertTimeToMs = time => {
     return JSON.stringify(moment(time).valueOf());
 };
@@ -283,4 +292,18 @@ const addTag = (array, tag) => {
 export const getCurrency = settings => {
     let currencyValue = settings.currency === 'GBD' ? '£' : settings.currency === 'Dollar' ? '$' : '€';
     return currencyValue;
+};
+
+export const getAllDaysFromTo = (from, to) => {
+    from = convertTimeToMs(from);
+    to = convertTimeToMs(to);
+    let allDates = [];
+    let newDate = from;
+    allDates.push(moment(newDate, 'x').format('MM/DD/YYYY'));
+    while (newDate < to) {
+        newDate = moment(newDate, 'x').add('days', 1).format('MM/DD/YYYY');
+        allDates.push(newDate);
+        newDate = convertTimeToMs(newDate);
+    }
+    return allDates;
 };

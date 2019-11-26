@@ -3,11 +3,12 @@ import Filter from '../components/Filter/FilterForStatistics';
 import AuthContext from '../context/auth-context';
 import Spinner from '../components/Spinner/Spinner';
 import moment from 'moment';
-import { onFilterExpenses, onFilterIncomes, getSettingsData, getExpenseList, getIncomeList, getUserData, sortByDate, getCurrency } from './ApiCalls';
+import { onFilterExpenses, onFilterIncomes, getSettingsData, getExpenseList, getIncomeList, getUserData, sortByDate, getCurrency, getFirstAndLastExpenseDate } from './ApiCalls';
 import StatisticsContext from '../context/statistics-context';
 import ExpensesAndIncomes from '../components/StatisticsCharts/ExpensesAndIncomes';
 import ExpensesByCategory from '../components/StatisticsCharts/ExpensesByCategory';
 import IncomesByCategory from '../components/StatisticsCharts/IncomesByCategories';
+import DailyBudget from '../components/StatisticsCharts/DailyBudget';
 import './Statistics.css';
 
 const Statistics = () => {
@@ -19,6 +20,8 @@ const Statistics = () => {
     let [settingsForBot, setSettingsForBot] = useState([]);
     let [allExpensesForBot, setAllExpensesForBot] = useState([]);
     let [user, setUser] = useState({});
+    let [dateFromFilter, setDateFromFilter] = useState({});
+    let [dailyAverage, setDailyAverage] = useState('');
 
     let [totalExpenses, setTotalExpenses] = useState({});
 
@@ -47,6 +50,7 @@ const Statistics = () => {
         let incomes = await getIncomeList(allUsers, currentUser);
         let all = expenses.concat(incomes);
         all = sortByDate(all);
+        setDateFromFilter(getFirstAndLastExpenseDate(all));
         setAllExpenses(all);
         setIsLoading(false);
         if (!allExpensesForBot.length) {
@@ -58,6 +62,7 @@ const Statistics = () => {
     }
 
     const getAllOnFilter = async values => {
+        setDateFromFilter(values);
         setIsLoading(true);
         let allSettings = [];
         if (!settings.length) {
@@ -86,7 +91,7 @@ const Statistics = () => {
 
 
     return (
-        <StatisticsContext.Provider value={{ getAllOnFilter, getAll, allExpenses, totalExpenses, setTotalExpenses }}>
+        <StatisticsContext.Provider value={{ getAllOnFilter, getAll, allExpenses, totalExpenses, setTotalExpenses, dateFromFilter, settings, setDailyAverage }}>
             <Fragment>
                 <Filter />
                 {
@@ -109,17 +114,20 @@ const Statistics = () => {
                                     <p className='statistics-text'>Incomes by categories:</p>
                                     <IncomesByCategory />
                                 </div>
-                                <div className="statistics-card">
-                                    <p className='statistics-text'>This is pieCart test test est e </p>
-                                    <ExpensesAndIncomes />
+                                <div className="statistics-card-big">
+                                    <p className='statistics-text'>
+                                        <li>Your average daily expenses are : {dailyAverage}&nbsp;{getCurrency(settings[0])}</li>
+                                        {settings[0].dailyBudget.length ? <li>Your daily budget is: {settings[0].dailyBudget} &nbsp;{getCurrency(settings[0])}.</li> : null}
+                                    </p>
+                                    <DailyBudget />
                                 </div>
                                 <div className="statistics-card">
                                     <p className='statistics-text'>This is pieCart test test est e </p>
                                     <ExpensesAndIncomes />
                                 </div>
                             </div> :
-                            <div className='warning-box' style={{marginTop: "5%"}}>
-                                <div className="alert alert-danger" style={{marginBottom: "0px"}}role="alert">
+                            <div className='warning-box' style={{ marginTop: "5%" }}>
+                                <div className="alert alert-danger" style={{ marginBottom: "0px" }} role="alert">
                                     There are no data.
                                  </div>
                             </div>

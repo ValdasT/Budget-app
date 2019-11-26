@@ -1,4 +1,4 @@
-import React, { useContext,useState, Fragment } from 'react';
+import React, { useContext, useState, Fragment } from 'react';
 import { Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import StatisticsContext from '../../context/statistics-context';
@@ -26,43 +26,43 @@ const Filter = () => {
             dateTo: ''
         };
         switch (filter) {
-        case 'today':
-            date = {
-                dateFrom: moment().format('MM/DD/YYYY'),
-                dateTo: moment().format('MM/DD/YYYY')
-            };
-            getAllOnFilter(date);
-            break;
-        case 'week':
-            date = {
-                dateFrom: moment().startOf('week').format('MM/DD/YYYY'),
-                dateTo: moment().endOf('week').format('MM/DD/YYYY')
-            };
-            getAllOnFilter(date);
-            break;
-        case 'month':
-            date = {
-                dateFrom: moment().startOf('month').format('MM/DD/YYYY'),
-                dateTo: moment().endOf('month').format('MM/DD/YYYY')
-            };
-            getAllOnFilter(date);
-            break;
-        case 'year':
-            date = {
-                dateFrom: moment().startOf('year').format('MM/DD/YYYY'),
-                dateTo: moment().endOf('year').format('MM/DD/YYYY')
-            };
-            getAllOnFilter(date);
-            break;
-        case 'all':
-            getAll();
-            break;
-        default:
-            date = {
-                dateFrom: moment().startOf('month').format('MM/DD/YYYY'),
-                dateTo: moment().endOf('month').format('MM/DD/YYYY')
-            };
-            getAllOnFilter(date);
+            case 'today':
+                date = {
+                    dateFrom: moment().format('MM/DD/YYYY'),
+                    dateTo: moment().format('MM/DD/YYYY')
+                };
+                getAllOnFilter(date);
+                break;
+            case 'week':
+                date = {
+                    dateFrom: moment().startOf('week').format('MM/DD/YYYY'),
+                    dateTo: moment().endOf('week').format('MM/DD/YYYY')
+                };
+                getAllOnFilter(date);
+                break;
+            case 'month':
+                date = {
+                    dateFrom: moment().startOf('month').format('MM/DD/YYYY'),
+                    dateTo: moment().endOf('month').format('MM/DD/YYYY')
+                };
+                getAllOnFilter(date);
+                break;
+            case 'year':
+                date = {
+                    dateFrom: moment().startOf('year').format('MM/DD/YYYY'),
+                    dateTo: moment().endOf('year').format('MM/DD/YYYY')
+                };
+                getAllOnFilter(date);
+                break;
+            case 'all':
+                getAll();
+                break;
+            default:
+                date = {
+                    dateFrom: moment().startOf('month').format('MM/DD/YYYY'),
+                    dateTo: moment().endOf('month').format('MM/DD/YYYY')
+                };
+                getAllOnFilter(date);
         }
     };
 
