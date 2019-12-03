@@ -29,7 +29,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build && mv build ../public",
-    "test": "react-scripts test",
+    "test": "react-scripts test --env=jsdom --verbose=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

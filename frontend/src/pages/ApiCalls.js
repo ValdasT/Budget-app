@@ -282,7 +282,7 @@ const convertTimeToMs = time => {
     return JSON.stringify(moment(time).valueOf());
 };
 
-const addTag = (array, tag) => {
+export const addTag = (array, tag) => {
     array.forEach(e => {
         e.tag = tag;
     });
