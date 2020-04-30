@@ -121,10 +121,6 @@ const Statistics = () => {
                                     </p>
                                     <DailyBudget />
                                 </div>
-                                <div className="statistics-card">
-                                    <p className='statistics-text'>This is pieCart test test est e </p>
-                                    <ExpensesAndIncomes />
-                                </div>
                             </div> :
                             <div className='warning-box' style={{ marginTop: "5%" }}>
                                 <div className="alert alert-danger" style={{ marginBottom: "0px" }} role="alert">
