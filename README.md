@@ -18,7 +18,7 @@ npm install
 cd Budget-app
 npm install
 ```
-  - Create a `env.local` file to hold environment variables and create values:
+  - Create a `.env` local file to hold environment variables and create values:
   >MONGO_USER=
   >
   >MONGO_PASSWORD=
